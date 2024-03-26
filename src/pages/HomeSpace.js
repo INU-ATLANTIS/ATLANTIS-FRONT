@@ -1,7 +1,7 @@
-import styled, { ThemeProvider } from "styled-components";
-import { createGlobalStyle } from "styled-components";
-import { Link } from "react-router-dom";
-import LogoImg from "../assets/commINUty.png";
+import styled, { ThemeProvider } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
+import { Link } from 'react-router-dom'
+import LogoImg from '../assets/commINUty.png'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -13,37 +13,37 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.backgroundColor};
     color: ${({ theme }) => theme.color};
   }
-`;
+`
 
 const THEMES = {
   light: {
-    backgroundColor: "#ffffff",
-    color: "#000000",
+    backgroundColor: '#ffffff',
+    color: '#000000',
   },
   dark: {
-    backgroundColor: "#03040c",
-    color: "#ffffff",
+    backgroundColor: '#03040c',
+    color: '#ffffff',
   },
-};
+}
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 400px;
   margin: 100px auto 40px;
-`;
+`
 
 const Logo = styled.img`
   margin: 16px 20px;
   width: 180px;
-`;
+`
 
 const Description = styled.div`
   color: #585858;
   margin: 20px 20px;
   font-size: 16px;
   line-height: 22px;
-`;
+`
 
 const BottomContainer = styled.div`
   display: flex;
@@ -55,7 +55,7 @@ const BottomContainer = styled.div`
   bottom: 0;
   width: 100%;
   padding: 20px;
-`;
+`
 
 const Button = styled(Link)`
   background-color: #004a9e;
@@ -77,7 +77,7 @@ const Button = styled(Link)`
   &:active {
     background-color: #16457a;
   }
-`;
+`
 
 const Question = styled.div`
   display: flex;
@@ -85,17 +85,17 @@ const Question = styled.div`
   color: #000000;
   font-size: 14px;
   padding: 0 0 40px;
-`;
+`
 
 const Linkto = styled(Link)`
   color: #004a9e;
   text-decoration: none;
   margin-left: 5px;
-`;
+`
 
 function HomeSpace() {
   return (
-    <ThemeProvider theme={THEMES["light"]}>
+    <ThemeProvider theme={THEMES['light']}>
       <Container>
         <GlobalStyle />
         <Logo src={LogoImg} alt="LogoImg" />
@@ -112,7 +112,7 @@ function HomeSpace() {
         </BottomContainer>
       </Container>
     </ThemeProvider>
-  );
+  )
 }
 
-export default HomeSpace;
+export default HomeSpace
