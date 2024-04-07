@@ -1,30 +1,7 @@
-import styled, { ThemeProvider } from 'styled-components'
-import { createGlobalStyle } from 'styled-components'
+import styled from 'styled-components'
+
 import { Link } from 'react-router-dom'
 import LogoImg from '../assets/commINUty.png'
-
-const GlobalStyle = createGlobalStyle`
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: ${({ theme }) => theme.backgroundColor};
-    color: ${({ theme }) => theme.color};
-  }
-`
-
-const THEMES = {
-  light: {
-    backgroundColor: '#ffffff',
-    color: '#000000',
-  },
-  dark: {
-    backgroundColor: '#03040c',
-    color: '#ffffff',
-  },
-}
 
 const Container = styled.div`
   display: flex;
@@ -95,23 +72,20 @@ const Linkto = styled(Link)`
 
 function HomeSpace() {
   return (
-    <ThemeProvider theme={THEMES['light']}>
-      <Container>
-        <GlobalStyle />
-        <Logo src={LogoImg} alt="LogoImg" />
-        <Description>
-          당신의 인천대학교 생활을 도와줄
-          <br />
-          위치기반 통합 서비스
-        </Description>
-        <BottomContainer>
-          <Button to="/LoginSpace">로그인</Button>
-          <Question>
-            아직 회원이 아니신가요? <Linkto to="/JoinSpace">회원가입</Linkto>
-          </Question>
-        </BottomContainer>
-      </Container>
-    </ThemeProvider>
+    <Container>
+      <Logo src={LogoImg} alt="LogoImg" />
+      <Description>
+        당신의 인천대학교 생활을 도와줄
+        <br />
+        위치기반 통합 서비스
+      </Description>
+      <BottomContainer>
+        <Button to="/LoginSpace">로그인</Button>
+        <Question>
+          아직 회원이 아니신가요? <Linkto to="/JoinSpace">회원가입</Linkto>
+        </Question>
+      </BottomContainer>
+    </Container>
   )
 }
 
