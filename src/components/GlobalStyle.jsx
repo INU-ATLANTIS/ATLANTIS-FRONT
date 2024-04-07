@@ -9,6 +9,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Noto Sans KR', sans-serif;
     background-color: ${({ theme }) => theme.backgroundColor};
     color: ${({ theme }) => theme.color};
+    margin: 0;
   }
 `
 
