@@ -1,92 +1,86 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Link } from 'react-router-dom'
-import LogoImg from '../assets/commINUty.png'
+
+export default function Welcome() {
+  return (
+    <Container>
+      <LogoText>
+        comm
+        <span>INU</span>
+        ty
+      </LogoText>
+
+      <BottomContainer>
+        <div style={{ height: 118 }}></div>
+
+        <Button>로그인</Button>
+
+        <TextButton>아직 회원이 아니신가요?</TextButton>
+      </BottomContainer>
+    </Container>
+  )
+}
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 400px;
-  margin: 100px auto 40px;
+  width: 100vw;
+  height: 100vh;
 `
 
-const Logo = styled.img`
-  margin: 16px 20px;
-  width: 180px;
-`
+const LogoText = styled.h1`
+  font-size: 38px;
+  line-height: 46px;
+  font-weight: 600;
+  margin: 0px;
+  margin-top: 80px;
+  padding-left: 16px;
 
-const Description = styled.div`
-  color: #585858;
-  margin: 20px 20px;
-  font-size: 16px;
-  line-height: 22px;
+  ${({ theme }) => css`
+    color: ${theme.secondaryColor};
+
+    span {
+      color: ${theme.primaryColor};
+    }
+  `}
 `
 
 const BottomContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  width: 100vw;
+  height: 118px;
+  padding: 16px;
   position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  padding: 20px;
+  bottom: 0px;
+  left: 0px;
 `
 
 const Button = styled(Link)`
-  background-color: #004a9e;
   border: none;
-  border-radius: ${({ $round }) => ($round ? `9999px` : `8px`)};
+  border-radius: 12px;
   color: #ffffff;
-  cursor: pointer;
   font-size: 16px;
-  padding: 16px;
-  width: 360px;
-  height: 50px;
+  line-height: 24px;
+  min-height: 52px;
+  text-decoration: none;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin: auto 20px 60px;
-  text-decoration: none;
-
-  &:hover,
-  &:active {
-    background-color: #16457a;
-  }
-`
-
-const Question = styled.div`
-  display: flex;
   justify-content: center;
-  color: #000000;
-  font-size: 14px;
-  padding: 0 0 40px;
+  width: 100%;
+
+  ${({ theme }) => css`
+    background-color: ${theme.primaryColor};
+  `};
 `
 
-const Linkto = styled(Link)`
-  color: #004a9e;
-  text-decoration: none;
-  margin-left: 5px;
+const TextButton = styled(Link)`
+  padding: 8px 4px;
+  font-size: 13px;
+  line-height: 18px;
+  color: #767676;
+  margin-top: 8px;
+  text-decoration: underline;
 `
-
-function Welcome() {
-  return (
-    <Container>
-      <Logo src={LogoImg} alt="LogoImg" />
-      <Description>
-        당신의 인천대학교 생활을 도와줄
-        <br />
-        위치기반 통합 서비스
-      </Description>
-      <BottomContainer>
-        <Button to="/LoginSpace">로그인</Button>
-        <Question>
-          아직 회원이 아니신가요? <Linkto to="/JoinSpace">회원가입</Linkto>
-        </Question>
-      </BottomContainer>
-    </Container>
-  )
-}
-
-export default Welcome
