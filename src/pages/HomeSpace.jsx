@@ -1,6 +1,6 @@
 import { BottomNavigation } from '../components/BottomNavigation'
 
-export function HomeSpace() {
+export default function HomeSpace() {
   return (
     <>
       <BottomNavigation />

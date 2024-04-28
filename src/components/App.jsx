@@ -1,12 +1,12 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import WelcomeSpace from '../pages/WelcomeSpace';
-import JoinSpace from '../pages/JoinSpace';
-import LoginSpace from '../pages/LoginSpace';
-import HomeSpace from '../pages/HomeSpace';
-import Building from '../pages/Building';
-import Buildings from '../pages/Buildings';
-import LectureSpace from '../pages/LectureSpace';
-import PostsSpace from '../pages/PostsSpace';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import WelcomeSpace from '../pages/WelcomeSpace'
+import JoinSpace from '../pages/JoinSpace'
+import LoginSpace from '../pages/LoginSpace'
+import HomeSpace from '../pages/HomeSpace'
+import Building from '../pages/Building'
+import Buildings from '../pages/Buildings'
+import LectureSpace from '../pages/LectureSpace'
+import PostsSpace from '../pages/PostsSpace'
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <Route path="/posts" element={<PostsSpace />} />
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App

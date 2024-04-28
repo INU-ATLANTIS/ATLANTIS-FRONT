@@ -1,6 +1,6 @@
 import { BottomNavigation } from '../components/BottomNavigation'
 
-export function PostsSpace() {
+export default function PostsSpace() {
   return (
     <>
       <BottomNavigation />

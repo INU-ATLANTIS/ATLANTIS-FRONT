@@ -1,6 +1,6 @@
 import { BottomNavigation } from '../components/BottomNavigation'
 
-export function LectureSpace() {
+export default function LectureSpace() {
   return (
     <>
       <BottomNavigation />
