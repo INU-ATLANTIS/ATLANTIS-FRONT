@@ -107,7 +107,7 @@ const Linkto = styled(Link)`
   margin-left: 5px;
 `
 
-function JoinSpace() {
+function Join() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [certificationNumber, setCertificationNumber] = useState('')
@@ -291,4 +291,4 @@ function JoinSpace() {
   )
 }
 
-export default JoinSpace
+export default Join

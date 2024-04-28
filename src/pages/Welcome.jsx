@@ -70,7 +70,7 @@ const Linkto = styled(Link)`
   margin-left: 5px;
 `
 
-function WelcomeSpace() {
+function Welcome() {
   return (
     <Container>
       <Logo src={LogoImg} alt="LogoImg" />
@@ -89,4 +89,4 @@ function WelcomeSpace() {
   )
 }
 
-export default WelcomeSpace
+export default Welcome

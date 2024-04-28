@@ -98,7 +98,7 @@ const Linkto = styled(Link)`
   margin-left: 5px;
 `
 
-function LoginSpace() {
+function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [id, setId] = useState(false)
@@ -171,4 +171,4 @@ function LoginSpace() {
   )
 }
 
-export default LoginSpace
+export default Login
