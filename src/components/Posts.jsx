@@ -16,8 +16,13 @@ export default function Posts({ show, clickMore }) {
         const fetchPostList = async () => {
             try {
                 const list = await fetchPosts(buildingId);
-                setPostList(list.buildingPostList);
-                setIsFetching(false);
+                if (list.code === "SU") {
+                    setPostList(list.buildingPostList);
+                    setIsFetching(false);
+                } else {
+                    setError(list.message);
+                    setIsFetching(false);
+                }
             } catch (err) {
                 setError(err);
                 setIsFetching(false);
@@ -26,15 +31,20 @@ export default function Posts({ show, clickMore }) {
 
         fetchPostList();
     }, []);
+
+    if (error !== null) {
+        return <div>{error}</div>
+    }
+
     const postElement = []
 
     if (!isFetching && postList !== null) {
-        const iter = (show !== undefined ? (postList.length < 3 ? postList.length : 3) : postList.length);
+        const iter = (show !== undefined ? (postList.length < 3 ? postList.length : show) : postList.length);
 
         for (let i = 0; i < iter; i++) {
             const post = postList[i];
             postElement.push(
-                <Post key={i} post={post} />
+                <Post key={post.postId} post={post} />
             );
             if (i !== (iter - 1)) {
                 postElement.push(

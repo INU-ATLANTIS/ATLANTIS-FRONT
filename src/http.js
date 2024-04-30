@@ -8,13 +8,13 @@ export const fetchBuilding = async () => {
         if (resData.code === "SU") {
             return resData.buildingList;
         }
-    } catch (error) {
-        if (error.response) {
-            alert(error.response.data.message);
-        } else {
-            alert("오류가 발생했습니다.");
+        if (resData.code === "VF" || resData.code === "DBE") {
+            alert(resData.message)
         }
+    } catch (error) {
+        alert(error.message);
     }
+    return;
 
 }
 
@@ -24,15 +24,10 @@ export const fetchOffice = async (buildingId) => {
         const response = await fetch(`${BASE_URL}/api/v1/marker/building/${buildingId}`);
         const resData = await response.json();
 
-        if (resData.code === "SU") {
-            return resData;
-        }
+        return resData;
+
     } catch (error) {
-        if (error.response) {
-            alert(error.response.data.message);
-        } else {
-            alert("오류가 발생했습니다.");
-        }
+        alert(error.message);
     }
     return;
 }
@@ -43,15 +38,10 @@ export const fetchPosts = async (buildingId) => {
         const response = await fetch(`${BASE_URL}/api/v1/post/building/${buildingId}`);
         const resData = await response.json();
 
-        if (resData.code === "SU") {
-            return resData;
-        }
+        return resData;
+
     } catch (error) {
-        if (error.response) {
-            alert(error.response.data.message);
-        } else {
-            alert("오류가 발생했습니다.");
-        }
+        alert(error.message);
     }
     return;
 }
