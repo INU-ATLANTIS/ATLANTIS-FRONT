@@ -20,8 +20,13 @@ export default function Building() {
         const fetchBuildingInfo = async () => {
             try {
                 const info = await fetchOffice(buildingId);
-                setBuildingInfo(info);
-                setIsFetching(false);
+                if (info.code === "SU") {
+                    setBuildingInfo(info);
+                    setIsFetching(false);
+                } else {
+                    setError(info.message);
+                    setIsFetching(false);
+                }
             } catch (err) {
                 setError(err);
                 setIsFetching(false);
@@ -30,10 +35,7 @@ export default function Building() {
 
         fetchBuildingInfo();
     }, [buildingId]);
-    console.log(buildingInfo)
-    // if (error) {
-    //     return <Error title="An error occurred!" message={error.message} />
-    // }
+
 
     // 스크롤이 50px 이상 내려올경우 true값을 넣어줄 useState
     const [scroll, setScroll] = useState(false);
@@ -54,6 +56,10 @@ export default function Building() {
             setScroll(false);
         }
     };
+
+    if (error !== null) {
+        return <div>{error}</div>
+    }
 
     return (
         <Container id="container">

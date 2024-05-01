@@ -8,7 +8,14 @@ export default function OfficeInformation({ buildingInfo }) {
     const buildingId = useParams().buildingId;
     return (
         <Container>
-            {buildingInfo.url.length !== 0 && <StyledP><IMG src={HOME_IMG} alt="homepage icon" /><LinkTo to={buildingInfo.url} target="_blank">{buildingInfo.name} 홈페이지</LinkTo></StyledP>}
+            {buildingInfo.url && buildingInfo.url.length !== 0 &&
+                <StyledP>
+                    <IMG src={HOME_IMG} alt="homepage icon" />
+                    <LinkTo to={buildingInfo.url} target="_blank">
+                        {buildingInfo.name} 홈페이지
+                    </LinkTo>
+                </StyledP>
+            }
             <StyledP><IMG src={CALL_IMG} alt="call icon" /><LinkTo to={`tel:${buildingInfo.phone}`}>{buildingInfo.phone}</LinkTo></StyledP>
             <StyledP><IMG src={LOCATION_IMG} alt="location icon" />제{buildingId}호관 {buildingInfo.office}</StyledP>
         </Container>
