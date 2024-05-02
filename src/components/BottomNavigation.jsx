@@ -23,7 +23,7 @@ export function BottomNavigation() {
 
           <Label>게시글</Label>
         </NavItem>
-        <NavItem active={pathname.includes('lecture')} to="/lecture">
+        <NavItem active={pathname.includes('building')} to="/building">
           <LocationCity />
 
           <Label>강의실</Label>

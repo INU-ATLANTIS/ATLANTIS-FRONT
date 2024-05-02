@@ -14,9 +14,9 @@ export default function Welcome() {
       <BottomContainer>
         <div style={{ height: 118 }}></div>
 
-        <Button>로그인</Button>
+        <Button to="/login">로그인</Button>
 
-        <TextButton>아직 회원이 아니신가요?</TextButton>
+        <TextButton to="/join">아직 회원이 아니신가요?</TextButton>
       </BottomContainer>
     </Container>
   )
