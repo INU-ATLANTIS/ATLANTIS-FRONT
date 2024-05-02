@@ -1,28 +1,36 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import WelcomeSpace from '../pages/WelcomeSpace';
-import JoinSpace from '../pages/JoinSpace';
-import LoginSpace from '../pages/LoginSpace';
-import { HomeSpace } from '../pages/HomeSpace';
-import Building from '../pages/Building';
-import Buildings from '../pages/Buildings';
-import { LectureSpace } from '../pages/LectureSpace';
-import { PostsSpace } from '../pages/PostsSpace';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ThemeProvider } from 'styled-components'
+import Welcome from '../pages/Welcome'
+import Join from '../pages/Join'
+import Login from '../pages/Login'
+import Home from '../pages/Home'
+import Building from '../pages/Building'
+import Buildings from '../pages/Buildings'
+import Posts from '../pages/Posts'
+import Posting from '../pages/Posting'
+
+const theme = {
+  primaryColor: '#004A92',
+  secondaryColor: '#FFA800',
+}
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<WelcomeSpace />} />
-        <Route path="/JoinSpace" element={<JoinSpace />} />
-        <Route path="/LoginSpace" element={<LoginSpace />} />
-        <Route path="/home" element={<HomeSpace />} />
-        <Route path="/building" element={<Buildings />} />
-        <Route path="/building/:buildingId" element={<Building />} />
-        <Route path="/lecture" element={<LectureSpace />} />
-        <Route path="/posts" element={<PostsSpace />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/join" element={<Join />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/building" element={<Buildings />} />
+          <Route path="/building/:buildingId" element={<Building />} />
+          <Route path="/posts" element={<Posts />} />
+          <Route path="/post" element={<Posting />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
+  )
 }
 
-export default App;
+export default App

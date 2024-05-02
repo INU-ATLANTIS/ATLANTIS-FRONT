@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 
-import { Link } from 'react-router-dom'
-import axios from 'axios'
+import { Link, useNavigate } from 'react-router-dom'
 import arrow from '../assets/ArrowLeft.png'
 import mailImg from '../assets/Vector.png'
 import passwordImg from '../assets/Lock.png'
 import Input from '../components/Input'
 import Checkbox from '../components/Checkbox'
 import { useState } from 'react'
+import client from '../lib/client'
 
 const Container = styled.div`
   width: 400px;
@@ -98,16 +98,16 @@ const Linkto = styled(Link)`
   margin-left: 5px;
 `
 
-function LoginSpace() {
+function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [id, setId] = useState(false)
 
-  const BASE_URL = 'http://43.203.179.227:4000'
+  const navigate = useNavigate()
 
   const login = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/auth/sign-in`, {
+      const response = await client.post(`/auth/sign-in`, {
         email: email,
         password: password,
       })
@@ -115,6 +115,7 @@ function LoginSpace() {
       if (response.data.code === 'SU') {
         alert('로그인 성공')
         localStorage.setItem('token', response.data.token)
+        navigate('/home')
       } else {
         alert(response.data.message)
       }
@@ -171,4 +172,4 @@ function LoginSpace() {
   )
 }
 
-export default LoginSpace
+export default Login
