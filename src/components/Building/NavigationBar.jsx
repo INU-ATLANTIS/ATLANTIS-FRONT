@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import arrowBack from "../assets/arrow_back_ios_new.png"
+import { ReactComponent as BackArrow } from '../../assets/icons/arrow_back_ios_new.svg'
 import { useNavigate } from "react-router-dom";
 
 const NavigationBar = ({ children }) => {
@@ -11,7 +11,8 @@ const NavigationBar = ({ children }) => {
     return (
         <NavBar id="navBar">
             <LeftContainer id="left-container">
-                <img src={arrowBack} alt="back arrow" onClick={clickHandler} style={{ marginRight: "8px" }} />
+                {/* <img src={arrowBack} alt="back arrow" onClick={clickHandler} style={{ marginRight: "8px" }} /> */}
+                <BackArrow onClick={clickHandler} style={{ marginRight: "8px" }} />
                 {children}
             </LeftContainer>
             <RightContainer id="right-container" />

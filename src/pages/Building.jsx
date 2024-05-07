@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
 import styled from "styled-components";
-import NavigationBar from "../components/NavigationBar.jsx";
-import Title from "../components/Title.jsx";
+import NavigationBar from "../components/Building/NavigationBar.jsx";
+import Title from "../components/Building/Title.jsx";
 import { fetchOffice } from "../http.js";
 import Divider from "../components/Divider.jsx";
 import { useParams } from "react-router-dom";
-import Tabs from "../components/Tabs.jsx";
+import Tabs from "../components/Building/Tabs.jsx";
 
 export default function Building() {
     const [buildingInfo, setBuildingInfo] = useState(null);
