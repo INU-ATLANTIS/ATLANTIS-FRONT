@@ -45,6 +45,7 @@ const Container = styled.div`
   height: 48px;
   display: flex;
   border-top: 1px solid #f1f1f5;
+  background-color: #ffffff;
 `
 
 const NavItem = styled(Link)`
