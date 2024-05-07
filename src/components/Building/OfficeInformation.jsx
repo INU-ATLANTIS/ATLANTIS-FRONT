@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import CALL_IMG from "../assets/call.png";
-import HOME_IMG from "../assets/other_houses.png";
-import LOCATION_IMG from "../assets/location_on.png";
+import CALL_IMG from "../../assets/call.png";
+import HOME_IMG from "../../assets/other_houses.png";
+import LOCATION_IMG from "../../assets/location_on.png";
 import { Link, useParams } from "react-router-dom";
 
 export default function OfficeInformation({ buildingInfo }) {
@@ -16,8 +16,8 @@ export default function OfficeInformation({ buildingInfo }) {
                     </LinkTo>
                 </StyledP>
             }
-            <StyledP><IMG src={CALL_IMG} alt="call icon" /><LinkTo to={`tel:${buildingInfo.phone}`}>{buildingInfo.phone}</LinkTo></StyledP>
-            <StyledP><IMG src={LOCATION_IMG} alt="location icon" />제{buildingId}호관 {buildingInfo.office}</StyledP>
+            {buildingInfo.phone !== null && <StyledP><IMG src={CALL_IMG} alt="call icon" /><LinkTo to={`tel:${buildingInfo.phone}`}>{buildingInfo.phone}</LinkTo></StyledP>}
+            {buildingId !== "30" && buildingId < 100 && (<StyledP><IMG src={LOCATION_IMG} alt="location icon" />제{buildingId}호관 {buildingInfo.office}</StyledP>)}
         </Container>
     );
 }

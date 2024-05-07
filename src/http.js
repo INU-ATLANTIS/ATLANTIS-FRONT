@@ -45,3 +45,30 @@ export const fetchPosts = async (buildingId) => {
     }
     return;
 }
+
+
+export const fetchFloorImgs = async (buildingId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/marker/${buildingId}/imagelist`);
+        const resData = await response.json();
+
+        return resData;
+
+    } catch (error) {
+        alert(error.message);
+    }
+    return;
+}
+
+export const searchBuilding = async (searchword) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/marker/search-building/${searchword}`)
+        const resData = await response.json();
+
+        return resData;
+
+    } catch (error) {
+        alert(error.message);
+    }
+    return;
+}

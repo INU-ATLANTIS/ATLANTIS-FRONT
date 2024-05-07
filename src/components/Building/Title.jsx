@@ -6,7 +6,7 @@ export default function Title({ name, buildingCode, buildingId, showDetail }) {
         <Div id="title">
             <TitleContainer>
                 <StyledTitle>{name}</StyledTitle>
-                <SubTitle>{buildingCode} 제{buildingId}호관</SubTitle>
+                {buildingId < 100 && buildingId !== 30 && <SubTitle>{buildingCode} 제{buildingId}호관</SubTitle>}
             </TitleContainer>
             {showDetail && <Link to={`/building/${buildingId}`}>
                 <Button>자세히</Button>
