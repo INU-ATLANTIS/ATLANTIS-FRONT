@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useLocation } from 'react-router-dom'
 import styled from "styled-components";
-import Office from "../components/Office.jsx";
-import Divider from "../components/Divider.jsx";
+import Office from "./Office.jsx";
+import Divider from "../Divider.jsx";
 import Floor from "./Floor.jsx";
 import Posts from "./Posts.jsx";
 
 
 export default function Tabs({ buildingInfo }) {
     const location = useLocation();
-    const [selectedTab, setSelectedTab] = useState(location.state === null ? "home" : location.state);
+    const [selectedTab, setSelectedTab] = useState(location.state === null ? "home" : location.state.tab);
     const selectTabHandler = (content) => {
         setSelectedTab(content);
     }

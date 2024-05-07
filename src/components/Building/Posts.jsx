@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Post from "./Post.jsx";
-import { fetchPosts } from "../http.js";
+import { fetchPosts } from "../../http.js";
 
 export default function Posts({ show, clickMore }) {
     const [postList, setPostList] = useState(null);
