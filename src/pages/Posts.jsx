@@ -1,14 +1,17 @@
 import styled from 'styled-components'
 import { BottomNavigation } from '../components/BottomNavigation'
 import client from '../lib/client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { format } from 'date-fns/format'
 
 export default function Posts() {
+  const [posts, setPosts] = useState()
+
   useEffect(() => {
     const getPosts = async () => {
       const response = await client.get('/post/latest-list')
 
-      console.log(response)
+      setPosts(response.data)
     }
 
     getPosts()
@@ -17,8 +20,21 @@ export default function Posts() {
   return (
     <Container>
       <TitleContainer>
-        <span>게시글 목록</span>
+        <span>최신 게시글</span>
       </TitleContainer>
+
+      <PostList>
+        {posts &&
+          posts.latestList.map(({ postId, title, content, writeDatetime }) => (
+            <li key={postId}>
+              <Title>{title}</Title>
+              <Content>{content}</Content>
+              <DateText>
+                {format(new Date(writeDatetime), 'MM-dd 작성')}
+              </DateText>
+            </li>
+          ))}
+      </PostList>
 
       <BottomNavigation />
     </Container>
@@ -46,4 +62,39 @@ const TitleContainer = styled.div`
     font-size: 28px;
     line-height: 38px;
   }
+`
+
+const PostList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-bottom: 80px;
+
+  li {
+    padding: 16px;
+    border-top: 1px solid #f1f1f5;
+  }
+`
+
+const Title = styled.span`
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.4px;
+  color: #111111;
+  font-weight: 600;
+`
+
+const Content = styled.p`
+  margin: 4px 0px;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.4px;
+  color: #505050;
+`
+
+const DateText = styled.span`
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.4px;
+  color: #999999;
 `
