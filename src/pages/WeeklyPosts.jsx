@@ -1,20 +1,15 @@
 import styled from 'styled-components'
-import { BottomNavigation } from '../components/BottomNavigation'
 import client from '../lib/client'
 import { useEffect, useState } from 'react'
 import { format } from 'date-fns/format'
-import { ReactComponent as RightArrow } from '../assets/icons/arrow_right.svg'
-import { useNavigate } from 'react-router-dom'
-import { PostFAB } from '../components/Home/PostFAB'
+import { TopNavigation } from '../components/TopNavigation'
 
-export default function Posts() {
-  const navigate = useNavigate()
-
+export default function WeeklyPosts() {
   const [posts, setPosts] = useState()
 
   useEffect(() => {
     const getPosts = async () => {
-      const response = await client.get('/post/latest-list')
+      const response = await client.get('/post/top')
 
       setPosts(response.data)
     }
@@ -24,21 +19,15 @@ export default function Posts() {
 
   return (
     <Container>
-      <TopBoxContainer>
-        <TopBox onClick={() => navigate('/posts/weeklyPosts')}>
-          <TopBoxTitle>주간 상위 게시글</TopBoxTitle>
-
-          <RightArrow />
-        </TopBox>
-      </TopBoxContainer>
+      <TopNavigation />
 
       <TitleContainer>
-        <span>최신 게시글</span>
+        <span>주간 상위 게시글</span>
       </TitleContainer>
 
       <PostList>
         {posts &&
-          posts.latestList.map(({ postId, title, content, writeDatetime }) => (
+          posts.topList.map(({ postId, title, content, writeDatetime }) => (
             <li key={postId}>
               <Title>{title}</Title>
               <Content>{content}</Content>
@@ -46,8 +35,6 @@ export default function Posts() {
             </li>
           ))}
       </PostList>
-
-      <BottomNavigation />
     </Container>
   )
 }
@@ -58,28 +45,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-`
-
-const TopBoxContainer = styled.div`
-  margin: 16px;
-  margin-bottom: 0px;
-`
-
-const TopBox = styled.div`
-  background-color: #f7f7fb;
-  border-radius: 16px;
-  width: 100%;
-  padding: 24px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-
-const TopBoxTitle = styled.span`
-  font-size: 20px;
-  line-height: 24px;
-  color: #505050;
-  font-weight: 600;
 `
 
 const TitleContainer = styled.div`

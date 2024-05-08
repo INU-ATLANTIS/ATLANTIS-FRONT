@@ -14,11 +14,14 @@ export function TopNavigation({ onBack }) {
   }
 
   return (
-    <Container>
-      <BackArrowContainer onClick={handleBack}>
-        <BackArrow />
-      </BackArrowContainer>
-    </Container>
+    <>
+      <Container>
+        <BackArrowContainer onClick={handleBack}>
+          <BackArrow />
+        </BackArrowContainer>
+      </Container>
+      <div style={{ minHeight: 56, visibility: 'hidden' }}>hidden height</div>
+    </>
   )
 }
 
@@ -26,6 +29,11 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   height: 56px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  width: 100vw;
 `
 
 const BackArrowContainer = styled.button`

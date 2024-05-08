@@ -251,4 +251,5 @@ const ContentTextarea = styled.textarea`
   padding: 16px;
   font-size: 16px;
   line-height: 24px;
+  resize: none;
 `
