@@ -30,7 +30,7 @@ export default function Posts() {
               <Title>{title}</Title>
               <Content>{content}</Content>
               <DateText>
-                {format(new Date(writeDatetime), 'MM-dd 작성')}
+                {format(new Date(writeDatetime), 'MM.dd 작성')}
               </DateText>
             </li>
           ))}
@@ -82,6 +82,12 @@ const Title = styled.span`
   letter-spacing: -0.4px;
   color: #111111;
   font-weight: 600;
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
 `
 
 const Content = styled.p`
@@ -90,6 +96,14 @@ const Content = styled.p`
   line-height: 24px;
   letter-spacing: -0.4px;
   color: #505050;
+  display: inline-block;
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `
 
 const DateText = styled.span`
