@@ -3,19 +3,22 @@ import { TopNavigation } from '../components/TopNavigation'
 import { useParams } from 'react-router-dom'
 import client from '../lib/client'
 import styled from 'styled-components'
+import { format } from 'date-fns/format'
+import { BottomSheet } from '../components/BottomSheet'
 
 import { ReactComponent as LikeIcon } from '../assets/icons/thumb_up.svg'
 import { ReactComponent as CommentIcon } from '../assets/icons/chat.svg'
-import { format } from 'date-fns/format'
-import { BottomSheet } from '../components/BottomSheet'
+import { ReactComponent as ReplyCommentIcon } from '../assets/icons/prompt_suggestion.svg'
 
 export default function PostDetail() {
   const { postId } = useParams()
 
   const contentRef = useRef(null)
+  const commentIdRef = useRef(null)
 
   const [post, setPost] = useState()
   const [comments, setComments] = useState()
+  const [replyComments, setReplyComments] = useState()
 
   const [openCommentBottomSheet, setOpenCommentBottomSheet] = useState(false)
 
@@ -36,7 +39,16 @@ export default function PostDetail() {
       const commentResponse = await client.get(`/post/${postId}/comment-list`)
 
       setPost(response.data)
-      setComments(commentResponse.data)
+      setComments(
+        commentResponse.data.commentList.filter(
+          ({ parentId }) => parentId === null
+        )
+      )
+      setReplyComments(
+        commentResponse.data.commentList.filter(
+          ({ parentId }) => parentId !== null
+        )
+      )
     }
 
     setPostAsync()
@@ -48,9 +60,38 @@ export default function PostDetail() {
     })
 
     const commentResponse = await client.get(`/post/${postId}/comment-list`)
-    setComments(commentResponse.data)
+
+    setComments(
+      commentResponse.data.commentList.filter(
+        ({ parentId }) => parentId === null
+      )
+    )
 
     setOpenCommentBottomSheet(false)
+  }
+
+  const handleReplyCommentPost = async () => {
+    await client.post(`/post/${commentIdRef.current}/comment`, {
+      content: contentRef.current.value,
+    })
+
+    const commentResponse = await client.get(`/post/${postId}/comment-list`)
+
+    setReplyComments(
+      commentResponse.data.commentList.filter(
+        ({ parentId }) => parentId !== null
+      )
+    )
+
+    setOpenCommentBottomSheet(false)
+  }
+
+  const handleLikeClick = async () => {
+    await client.put(`/post/${postId}/like`)
+
+    const postResponse = await client.get(`/post/${postId}`)
+
+    setPost(postResponse.data)
   }
 
   if (post === undefined) return null
@@ -75,32 +116,67 @@ export default function PostDetail() {
         <div>
           <LikeAndComment>
             <LikeIcon />
-            <span>0</span>
+            <span>{post.likeCount}</span>
           </LikeAndComment>
 
           <LikeAndComment>
             <CommentIcon />
-            <span>{comments ? comments.commentList.length : 0}</span>
+            <span>
+              {comments && replyComments
+                ? comments.length + replyComments.length
+                : 0}
+            </span>
           </LikeAndComment>
         </div>
 
-        <LikeButton>좋아요</LikeButton>
+        <LikeButton onClick={handleLikeClick}>좋아요</LikeButton>
       </LikeAndCommentInfoContainer>
 
       <Divider></Divider>
 
       {comments &&
-        comments.commentList.map(
-          ({ nickname, writeDatetime, content, commentId }) => (
-            <CommentContainer key={commentId}>
-              <CommentNickname>{nickname ?? '익명'}</CommentNickname>
-              <CommentContent>{content}</CommentContent>
-              <CommentDateTime>
-                {format(new Date(writeDatetime), 'MM/dd HH:mm')}
-              </CommentDateTime>
-            </CommentContainer>
+        comments.map(({ nickname, writeDatetime, content, commentId }) => {
+          const reply = replyComments.filter(
+            ({ parentId }) => parentId === commentId
           )
-        )}
+
+          return (
+            <>
+              <CommentContainer key={commentId}>
+                <div>
+                  <CommentNickname>{nickname ?? '익명'}</CommentNickname>
+                  <CommentContent>{content}</CommentContent>
+                  <CommentDateTime>
+                    {format(new Date(writeDatetime), 'MM/dd HH:mm')}
+                  </CommentDateTime>
+                </div>
+
+                <ReplyCommentButton
+                  onClick={() => {
+                    commentIdRef.current = commentId
+                    setOpenCommentBottomSheet(true)
+                  }}
+                >
+                  답글 작성
+                </ReplyCommentButton>
+              </CommentContainer>
+
+              {reply.map(({ nickname, writeDatetime, content, commentId }) => (
+                <ReplyCommentContainer key={commentId}>
+                  <ReplyCommentIcon />
+
+                  <div>
+                    <CommentNickname>{nickname ?? '익명'}</CommentNickname>
+                    <CommentContent>{content}</CommentContent>
+                    <CommentDateTime>
+                      {format(new Date(writeDatetime), 'MM/dd HH:mm')}
+                    </CommentDateTime>
+                  </div>
+                </ReplyCommentContainer>
+              ))}
+            </>
+          )
+        })}
 
       <div style={{ height: 56 }}></div>
       <CommentInputContainer>
@@ -112,14 +188,28 @@ export default function PostDetail() {
       <BottomSheet
         height="full"
         open={openCommentBottomSheet}
-        onOpenChange={setOpenCommentBottomSheet}
+        onOpenChange={open => {
+          if (!open && commentIdRef.current) {
+            commentIdRef.current = undefined
+          }
+          setOpenCommentBottomSheet(open)
+        }}
       >
         <BottomSheetContent>
           <ContentTextarea ref={contentRef} />
 
           <CommentPostButtonContainer>
-            <Button variant="primary" onClick={handleCommentPost}>
-              댓글 등록
+            <Button
+              variant="primary"
+              onClick={() => {
+                if (commentIdRef.current) {
+                  handleReplyCommentPost()
+                } else {
+                  handleCommentPost()
+                }
+              }}
+            >
+              {commentIdRef.current ? '답글 등록' : '댓글 등록'}
             </Button>
           </CommentPostButtonContainer>
         </BottomSheetContent>
@@ -242,6 +332,29 @@ const Divider = styled.div`
 const CommentContainer = styled.div`
   padding: 12px 0px;
   border-bottom: 1px solid #f1f1f5;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+`
+
+const ReplyCommentContainer = styled.div`
+  padding: 12px 0px;
+  border-bottom: 1px solid #f1f1f5;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+`
+
+const ReplyCommentButton = styled.button`
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #f7f7fb;
+  color: #505050;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  margin-top: 12px;
+  width: fit-content;
 `
 
 const CommentNickname = styled.span`
