@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.js": "/static/js/main.97650a03.js",
+    "static/media/favourite.png": "/static/media/favourite.72c0906a9dc62050c8b9.png",
+    "static/media/restaurant1.png": "/static/media/restaurant1.151005b6db0cd11d7121.png",
+    "static/media/coffee-shop1.png": "/static/media/coffee-shop1.e24892778b76f35d95e8.png",
+    "static/media/building.png": "/static/media/building.3b81a98b3be3130a7c92.png",
+    "static/media/shop1.png": "/static/media/shop1.42132ec093562ca7f76c.png",
+    "static/media/magnifying_glass.svg": "/static/media/magnifying_glass.6d449190ce4f891d692ddd1f540d4f97.svg",
+    "static/media/other_houses.svg": "/static/media/other_houses.5a9d7b9b93096be10866780b62719802.svg",
+    "static/media/event_note.svg": "/static/media/event_note.ad5027b5f62c5ef3318e672b70de5057.svg",
+    "index.html": "/index.html",
+    "static/media/location_city.svg": "/static/media/location_city.d1b103cee9e47341468136aa37991851.svg",
+    "static/media/arrow_back_ios_new.svg": "/static/media/arrow_back_ios_new.ab3df74907bc968b8b7c167669f39962.svg",
+    "static/media/arrow_right.svg": "/static/media/arrow_right.1d85782270be92edabc43e1055cbfc0f.svg",
+    "main.97650a03.js.map": "/static/js/main.97650a03.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.97650a03.js"
+  ]
+}
