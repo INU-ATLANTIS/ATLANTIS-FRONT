@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import { format } from 'date-fns/format'
 import { ReactComponent as RightArrow } from '../assets/icons/arrow_right.svg'
 import { useNavigate } from 'react-router-dom'
-import { PostFAB } from '../components/Home/PostFAB'
 
 export default function Posts() {
   const navigate = useNavigate()
@@ -39,7 +38,12 @@ export default function Posts() {
       <PostList>
         {posts &&
           posts.latestList.map(({ postId, title, content, writeDatetime }) => (
-            <li key={postId}>
+            <li
+              key={postId}
+              onClick={() => {
+                navigate(`/post/${postId}`)
+              }}
+            >
               <Title>{title}</Title>
               <Content>{content}</Content>
               <DateText>{format(new Date(writeDatetime), 'MM.dd')}</DateText>
