@@ -9,6 +9,7 @@ import Buildings from '../pages/Buildings'
 import Posts from '../pages/Posts'
 import Posting from '../pages/Posting'
 import WeeklyPosts from '../pages/WeeklyPosts'
+import PostDetail from '../pages/PostDetail'
 
 const theme = {
   primaryColor: '#004A92',
@@ -29,6 +30,7 @@ function App() {
           <Route path="/posts" element={<Posts />} />
           <Route path="/post" element={<Posting />} />
           <Route path="/posts/weeklyPosts" element={<WeeklyPosts />} />
+          <Route path="/post/:postId" element={<PostDetail />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
