@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { BottomNavigation } from '../components/BottomNavigation'
-import { PostFAB } from '../components/Home/PostFAB'
+import { PostFAB } from '../components/PostFAB'
 import client from '../lib/client'
 import { BottomSheet } from '../components/BottomSheet'
 import styled from 'styled-components'
@@ -59,7 +59,7 @@ export default function Home() {
         }}
       ></div>
 
-      <PostFAB />
+      <PostFAB postMode="marker" />
 
       <BottomSheet
         open={openBottomSheet}

@@ -12,6 +12,9 @@ export function PostListItem({
   writeDatetime,
   likeCount,
   commentCount,
+  myPost,
+  onEditPost,
+  onDeletePost,
 }) {
   const navigate = useNavigate()
 
@@ -22,26 +25,49 @@ export function PostListItem({
         navigate(`/post/${postId}`)
       }}
     >
-      <Title>{title}</Title>
-      <Content>{content}</Content>
+      <div>
+        <Title>{title}</Title>
+        <Content>{content}</Content>
 
-      <InfoContainer>
-        <InfoText>{format(new Date(writeDatetime), 'MM.dd')}</InfoText>
+        <InfoContainer>
+          <InfoText>{format(new Date(writeDatetime), 'MM.dd')}</InfoText>
 
-        {likeCount !== 0 && (
-          <LikeAndCommentContainer>
-            <LikeIcon />
-            <InfoText>{likeCount}</InfoText>
-          </LikeAndCommentContainer>
-        )}
+          {likeCount !== 0 && (
+            <LikeAndCommentContainer>
+              <LikeIcon />
+              <InfoText>{likeCount}</InfoText>
+            </LikeAndCommentContainer>
+          )}
 
-        {commentCount !== 0 && (
-          <LikeAndCommentContainer>
-            <CommentIcon />
-            <InfoText>{commentCount}</InfoText>
-          </LikeAndCommentContainer>
-        )}
-      </InfoContainer>
+          {commentCount !== 0 && (
+            <LikeAndCommentContainer>
+              <CommentIcon />
+              <InfoText>{commentCount}</InfoText>
+            </LikeAndCommentContainer>
+          )}
+        </InfoContainer>
+      </div>
+
+      {myPost && (
+        <MyPostControlContainer>
+          <EditButton
+            onClick={e => {
+              e.stopPropagation()
+              onEditPost(postId)
+            }}
+          >
+            수정
+          </EditButton>
+          <DeleteButton
+            onClick={e => {
+              e.stopPropagation()
+              onDeletePost(postId)
+            }}
+          >
+            삭제
+          </DeleteButton>
+        </MyPostControlContainer>
+      )}
     </li>
   )
 }
@@ -93,4 +119,36 @@ const LikeAndCommentContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
+`
+
+const EditButton = styled.button`
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #f7f7fb;
+  color: #505050;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  margin-top: 12px;
+  width: fit-content;
+`
+
+const DeleteButton = styled.button`
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #e15241;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  margin-top: 12px;
+  width: fit-content;
+`
+
+const MyPostControlContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
 `

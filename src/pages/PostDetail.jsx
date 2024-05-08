@@ -71,7 +71,7 @@ export default function PostDetail() {
   }
 
   const handleReplyCommentPost = async () => {
-    await client.post(`/post/${commentIdRef.current}/comment`, {
+    await client.post(`/post/${postId}/${commentIdRef.current}/comment`, {
       content: contentRef.current.value,
     })
 
