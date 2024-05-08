@@ -6,6 +6,7 @@ import { ReactComponent as RightArrow } from '../assets/icons/arrow_right.svg'
 import { useNavigate } from 'react-router-dom'
 
 import { PostListItem } from '../components/PostListItem'
+import { PostFAB } from '../components/PostFAB'
 
 export default function Posts() {
   const navigate = useNavigate()
@@ -30,6 +31,12 @@ export default function Posts() {
 
           <RightArrow />
         </TopBox>
+
+        <TopBox onClick={() => navigate('/myPosts')}>
+          <TopBoxTitle>내 게시글</TopBoxTitle>
+
+          <RightArrow />
+        </TopBox>
       </TopBoxContainer>
 
       <TitleContainer>
@@ -39,6 +46,8 @@ export default function Posts() {
       <PostList>
         {posts && posts.latestList.map(post => <PostListItem {...post} />)}
       </PostList>
+
+      <PostFAB postMode="post" />
 
       <BottomNavigation />
     </Container>
@@ -56,6 +65,8 @@ const Container = styled.div`
 const TopBoxContainer = styled.div`
   margin: 16px;
   margin-bottom: 0px;
+  display: flex;
+  gap: 16px;
 `
 
 const TopBox = styled.div`
