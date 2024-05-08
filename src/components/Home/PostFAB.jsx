@@ -15,8 +15,8 @@ const FAB = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
-  padding: 0px 16px;
+  height: 56px;
+  padding: 0px 24px;
   position: fixed;
   bottom: 68px;
   right: 20px;
@@ -25,6 +25,6 @@ const FAB = styled.button`
   background-color: ${({ theme }) => theme.primaryColor};
   color: white;
   border-radius: 9999px;
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 20px;
+  line-height: 24px;
 `
