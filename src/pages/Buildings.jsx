@@ -54,7 +54,6 @@ export default function Buildings() {
     const fetchBuildingList = async () => {
       try {
         const buildingList = await fetchBuilding()
-        console.log(buildingList)
         setBuildingList(buildingList)
         setIsFetching(false)
       } catch (err) {
@@ -276,8 +275,6 @@ export default function Buildings() {
 
         setSearchIndex(index)
         setSelectedInfo("search")
-
-
 
       } else {
         alert("건물 정보가 없습니다.")

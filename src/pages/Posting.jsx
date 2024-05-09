@@ -2,13 +2,14 @@ import styled, { css } from 'styled-components'
 import { TopNavigation } from '../components/TopNavigation'
 import client from '../lib/client'
 import { useEffect, useRef } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 
 export default function Posting() {
   const navigate = useNavigate()
 
   const { postId } = useParams()
-
+  const { state } = useLocation()
+  console.log(state)
   const titleRef = useRef(null)
   const contentRef = useRef(null)
 
@@ -49,11 +50,21 @@ export default function Posting() {
   }
 
   const handlePost = async () => {
-    await client.post('/post', {
-      title: titleRef.current.value,
-      content: contentRef.current.value,
-      imageList: [],
-    })
+    if (state) {
+      await client.post('/post', {
+        title: titleRef.current.value,
+        content: contentRef.current.value,
+        imageList: [],
+        buildingId: state.buildingId
+      })
+    }
+    else {
+      await client.post('/post', {
+        title: titleRef.current.value,
+        content: contentRef.current.value,
+        imageList: [],
+      })
+    }
 
     alert('게시글이 성공적으로 등록되었어요')
     navigate(-1)
@@ -114,12 +125,12 @@ const TitleContainer = styled.div`
     font-weight: 600;
 
     ${({ size }) =>
-      size === 'large'
-        ? css`
+    size === 'large'
+      ? css`
             font-size: 28px;
             line-height: 38px;
           `
-        : css`
+      : css`
             font-size: 24px;
             line-height: 34px;
           `}
