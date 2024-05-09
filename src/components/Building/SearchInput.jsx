@@ -29,7 +29,7 @@ export function SearchInput({ searchItems, activeEnter }) {
         <Container>
             <Glass style={{ position: "absolute", left: "20px", top: "21px", margin: "7px" }}></Glass>
             <Input
-                placeholder="건물 코드를 입력하세요."
+                placeholder="건물 코드 및 건물명을 입력하세요."
                 onChange={(e) => searchItems(e.target.value)}
                 onKeyDown={(e) => activeEnter(e)}
             />
