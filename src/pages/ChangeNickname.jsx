@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import client from "../lib/client";
 import { Link } from "react-router-dom";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -71,15 +71,14 @@ const Button = styled(Link)`
 
 function ChangeNickname() {
   const [newNickname, setNewNickname] = useState("");
-  const BASE_URL = "http://13.209.42.36:4000/api/v1/user";
   const navigate = useNavigate();
 
   // 닉네임 수정 함수
   const updateNickname = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(
-        `${BASE_URL}/nickname`,
+      await client.patch(
+        `/user/nickname`,
         { nickname: newNickname },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -97,7 +96,7 @@ function ChangeNickname() {
       <Container>
         <GlobalStyle />
         <Header>
-          <Span to="/">
+          <Span to="/loginUserInfo">
             <Arrow src={arrow} alt="이전" />
           </Span>
           <Title>닉네임 변경</Title>
