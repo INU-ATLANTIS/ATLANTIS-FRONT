@@ -1,14 +1,22 @@
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-export function PostFAB() {
+export function PostFAB({ postMode }) {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate('/post')
+    if (postMode === 'marker') {
+      navigate('/markerPosting')
+    } else {
+      navigate('/posting')
+    }
   }
 
-  return <FAB onClick={handleClick}>글쓰기</FAB>
+  return (
+    <FAB onClick={handleClick}>
+      {postMode === 'marker' ? '마커 등록' : '글쓰기'}
+    </FAB>
+  )
 }
 
 const FAB = styled.button`

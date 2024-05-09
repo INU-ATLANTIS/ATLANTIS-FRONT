@@ -2,10 +2,11 @@ import styled from 'styled-components'
 import { BottomNavigation } from '../components/BottomNavigation'
 import client from '../lib/client'
 import { useEffect, useState } from 'react'
-import { format } from 'date-fns/format'
 import { ReactComponent as RightArrow } from '../assets/icons/arrow_right.svg'
 import { useNavigate } from 'react-router-dom'
-import { PostFAB } from '../components/Home/PostFAB'
+
+import { PostListItem } from '../components/PostListItem'
+import { PostFAB } from '../components/PostFAB'
 
 export default function Posts() {
   const navigate = useNavigate()
@@ -30,6 +31,12 @@ export default function Posts() {
 
           <RightArrow />
         </TopBox>
+
+        <TopBox onClick={() => navigate('/myPosts')}>
+          <TopBoxTitle>내 게시글</TopBoxTitle>
+
+          <RightArrow />
+        </TopBox>
       </TopBoxContainer>
 
       <TitleContainer>
@@ -37,15 +44,10 @@ export default function Posts() {
       </TitleContainer>
 
       <PostList>
-        {posts &&
-          posts.latestList.map(({ postId, title, content, writeDatetime }) => (
-            <li key={postId}>
-              <Title>{title}</Title>
-              <Content>{content}</Content>
-              <DateText>{format(new Date(writeDatetime), 'MM.dd')}</DateText>
-            </li>
-          ))}
+        {posts && posts.latestList.map(post => <PostListItem {...post} />)}
       </PostList>
+
+      <PostFAB postMode="post" />
 
       <BottomNavigation />
     </Container>
@@ -63,20 +65,22 @@ const Container = styled.div`
 const TopBoxContainer = styled.div`
   margin: 16px;
   margin-bottom: 0px;
+  display: flex;
+  gap: 16px;
 `
 
 const TopBox = styled.div`
   background-color: #f7f7fb;
   border-radius: 16px;
   width: 100%;
-  padding: 24px 16px;
+  padding: 20px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `
 
 const TopBoxTitle = styled.span`
-  font-size: 20px;
+  font-size: 18px;
   line-height: 24px;
   color: #505050;
   font-weight: 600;
@@ -109,41 +113,4 @@ const PostList = styled.ul`
     padding: 16px;
     border-top: 1px solid #f1f1f5;
   }
-`
-
-const Title = styled.span`
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.4px;
-  color: #111111;
-  font-weight: 600;
-  display: inline-block;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: break-all;
-`
-
-const Content = styled.p`
-  margin: 4px 0px;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: -0.4px;
-  color: #505050;
-  display: inline-block;
-  width: 100%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  word-break: break-word;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-`
-
-const DateText = styled.span`
-  font-size: 13px;
-  line-height: 18px;
-  letter-spacing: -0.4px;
-  color: #999999;
 `

@@ -1,19 +1,18 @@
 import styled, { css } from 'styled-components'
 import { TopNavigation } from '../components/TopNavigation'
 import client from '../lib/client'
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export default function Posting() {
   const navigate = useNavigate()
-  const [step, setStep] = useState('text')
 
-  const postId = useRef()
+  const { postId } = useParams()
 
   const titleRef = useRef(null)
   const contentRef = useRef(null)
 
-  const handlePost = async () => {
+  useEffect(() => {
     const token = localStorage.getItem('token')
 
     client.interceptors.request.use(config => {
@@ -24,129 +23,75 @@ export default function Posting() {
 
       return config
     })
+  }, [])
 
-    const response = await client.post('/post', {
+  useEffect(() => {
+    const setPostAsync = async () => {
+      const response = await client.get(`/post/${postId}`)
+
+      titleRef.current.value = response.data.title
+      contentRef.current.value = response.data.content
+    }
+
+    if (postId) {
+      setPostAsync()
+    }
+  }, [postId])
+
+  const handlePostEdit = async () => {
+    await client.patch(`/post/${postId}`, {
+      title: titleRef.current.value,
+      content: contentRef.current.value,
+    })
+
+    alert('게시글이 성공적으로 수정되었어요')
+    navigate(-1)
+  }
+
+  const handlePost = async () => {
+    await client.post('/post', {
       title: titleRef.current.value,
       content: contentRef.current.value,
       imageList: [],
     })
 
-    postId.current = response.data.postId
-
-    setStep('location')
-  }
-
-  return (
-    <Container>
-      <TopNavigation
-        onBack={() => {
-          if (step === 'text') {
-            navigate(-1)
-          } else {
-            setStep('text')
-          }
-        }}
-      />
-
-      {step === 'text' ? (
-        <>
-          <TitleContainer size="large">
-            <span>게시글 작성</span>
-          </TitleContainer>
-
-          <InputContainer>
-            <Label>글 제목</Label>
-            <Input type="text" autoFocus ref={titleRef} />
-            <InputBottomLine />
-          </InputContainer>
-
-          <ContentTextarea ref={contentRef} />
-
-          <BottomContainer>
-            <div style={{ height: 84 }}></div>
-
-            <Button variant="primary" onClick={handlePost}>
-              다음
-            </Button>
-          </BottomContainer>
-        </>
-      ) : (
-        <>
-          <Location postId={postId.current} />
-        </>
-      )}
-    </Container>
-  )
-}
-
-function Location({ postId }) {
-  const latLng = useRef()
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    const mapContainer = document.getElementById('map')
-
-    const mapOption = {
-      center: new window.kakao.maps.LatLng(37.375, 126.631944),
-      level: 3,
-    }
-
-    const map = new window.kakao.maps.Map(mapContainer, mapOption)
-    map.setMaxLevel(4)
-
-    var marker = new window.kakao.maps.Marker({
-      // 지도 중심좌표에 마커를 생성합니다
-      position: map.getCenter(),
-    })
-
-    marker.setMap(map)
-
-    window.kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-      // 클릭한 위도, 경도 정보를 가져옵니다
-      latLng.current = mouseEvent.latLng
-
-      // 마커 위치를 클릭한 위치로 옮깁니다
-      marker.setPosition(latLng.current)
-
-      console.log(latLng.current)
-    })
-  }, [])
-
-  const handlePost = async () => {
-    await client.post('/marker', {
-      name: '',
-      x: latLng.current.Ma,
-      y: latLng.current.La,
-      postId,
-    })
-
     alert('게시글이 성공적으로 등록되었어요')
-
     navigate(-1)
   }
 
   return (
-    <>
-      <TitleContainer size="small">
-        <span>어떤 위치에 글을 남길까요?</span>
+    <Container>
+      <TopNavigation />
+
+      <TitleContainer size="large">
+        <span>게시글 작성</span>
       </TitleContainer>
 
-      <div
-        id="map"
-        style={{
-          width: '100vw',
-          height: 322,
-        }}
-      ></div>
+      <InputContainer>
+        <Label>글 제목</Label>
+        <Input type="text" autoFocus ref={titleRef} />
+        <InputBottomLine />
+      </InputContainer>
+
+      <ContentTextarea ref={contentRef} />
 
       <BottomContainer>
         <div style={{ height: 84 }}></div>
 
-        <Button variant="primary" onClick={handlePost}>
-          작성 완료
+        <Button
+          variant="primary"
+          onClick={() => {
+            if (postId) {
+              handlePostEdit()
+            } else {
+              handlePost()
+            }
+          }}
+        >
+          {postId ? '수정하기' : '등록하기'}
         </Button>
       </BottomContainer>
-    </>
+    </Container>
   )
 }
 

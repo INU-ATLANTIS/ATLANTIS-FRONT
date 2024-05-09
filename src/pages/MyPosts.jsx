@@ -1,15 +1,18 @@
 import styled from 'styled-components'
-import client from '../lib/client'
-import { useEffect, useState } from 'react'
 import { TopNavigation } from '../components/TopNavigation'
+import { useEffect, useState } from 'react'
+import client from '../lib/client'
 import { PostListItem } from '../components/PostListItem'
+import { useNavigate } from 'react-router-dom'
 
-export default function WeeklyPosts() {
+export default function MyPosts() {
+  const navigate = useNavigate()
+
   const [posts, setPosts] = useState()
 
   useEffect(() => {
     const getPosts = async () => {
-      const response = await client.get('/post/top')
+      const response = await client.get('/post/my')
 
       setPosts(response.data)
     }
@@ -17,16 +20,35 @@ export default function WeeklyPosts() {
     getPosts()
   }, [])
 
+  const handlePostDelete = async postId => {
+    await client.delete(`/post/${postId}`)
+
+    const response = await client.get('/post/my')
+    setPosts(response.data)
+  }
+
+  const handlePostEdit = async postId => {
+    navigate(`/posting/${postId}`)
+  }
+
   return (
     <Container>
       <TopNavigation />
 
       <TitleContainer>
-        <span>주간 상위 게시글</span>
+        <span>내 게시글</span>
       </TitleContainer>
 
       <PostList>
-        {posts && posts.topList.map(post => <PostListItem {...post} />)}
+        {posts &&
+          posts.myPosts.map(post => (
+            <PostListItem
+              {...post}
+              myPost
+              onDeletePost={handlePostDelete}
+              onEditPost={handlePostEdit}
+            />
+          ))}
       </PostList>
     </Container>
   )
