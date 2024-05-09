@@ -6,7 +6,7 @@ import mailImg from "../assets/Vector.png";
 import passwordImg from "../assets/Lock.png";
 import Input from "../components/Input";
 import Checkbox from "../components/Checkbox";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import client from "../lib/client";
 
 const Container = styled.div`
@@ -101,13 +101,21 @@ const Linkto = styled(Link)`
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [id, setId] = useState(false);
+  const [saveId, setSaveId] = useState(false);
 
   const navigate = useNavigate();
 
   function handleFindPassword() {
     navigate("/findpassword");
   }
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("savedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setSaveId(true);
+    }
+  }, []);
 
   const login = async () => {
     try {
@@ -163,7 +171,7 @@ function Login() {
         </div>
         <Button onClick={login}>로그인</Button>
         <IdContainer>
-          <Checkbox checked={id} onChange={() => setId(!id)}>
+          <Checkbox checked={saveId} onChange={() => setSaveId(!saveId)}>
             아이디 저장
           </Checkbox>
           <FindLabel onClick={handleFindPassword}>비밀번호 찾기</FindLabel>
