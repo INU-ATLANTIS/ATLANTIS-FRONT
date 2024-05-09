@@ -1,22 +1,23 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ThemeProvider } from 'styled-components'
-import Welcome from '../pages/Welcome'
-import Join from '../pages/Join'
-import Login from '../pages/Login'
-import Home from '../pages/Home'
-import Building from '../pages/Building'
-import Buildings from '../pages/Buildings'
-import Posts from '../pages/Posts'
-import MarkerPosting from '../pages/MarkerPosting'
-import WeeklyPosts from '../pages/WeeklyPosts'
-import PostDetail from '../pages/PostDetail'
-import MyPosts from '../pages/MyPosts'
-import Posting from '../pages/Posting'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+import Welcome from "../pages/Welcome";
+import Join from "../pages/Join";
+import Login from "../pages/Login";
+import Home from "../pages/Home";
+import Building from "../pages/Building";
+import Buildings from "../pages/Buildings";
+import Posts from "../pages/Posts";
+import MarkerPosting from "../pages/MarkerPosting";
+import WeeklyPosts from "../pages/WeeklyPosts";
+import PostDetail from "../pages/PostDetail";
+import MyPosts from "../pages/MyPosts";
+import Posting from "../pages/Posting";
+import FindPassword from "./FindPassword";
 
 const theme = {
-  primaryColor: '#004A92',
-  secondaryColor: '#FFA800',
-}
+  primaryColor: "#004A92",
+  secondaryColor: "#FFA800",
+};
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/join" element={<Join />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/findpassword" element={<FindPassword />} />
           <Route path="/building" element={<Buildings />} />
           <Route path="/building/:buildingId/*" element={<Building />} />
           <Route path="/posts" element={<Posts />} />
@@ -39,7 +41,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;
