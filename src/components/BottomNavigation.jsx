@@ -28,6 +28,11 @@ export function BottomNavigation() {
 
           <Label>강의실</Label>
         </NavItem>
+        <NavItem active={pathname.includes('user')} to="/user">
+          <LocationCity />
+
+          <Label>내 정보</Label>
+        </NavItem>
       </Container>
     </>
   )

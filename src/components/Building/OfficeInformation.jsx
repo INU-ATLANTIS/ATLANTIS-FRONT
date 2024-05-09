@@ -1,23 +1,23 @@
 import styled from "styled-components";
-import CALL_IMG from "../../assets/call.png";
-import HOME_IMG from "../../assets/other_houses.png";
-import LOCATION_IMG from "../../assets/location_on.png";
 import { Link, useParams } from "react-router-dom";
-
+import { ReactComponent as HOME } from "../../assets/icons/other_houses.svg"
+import { ReactComponent as CALL } from "../../assets/icons/call.svg"
+import { ReactComponent as LOCATION } from "../../assets/icons/location_on.svg"
 export default function OfficeInformation({ buildingInfo }) {
     const buildingId = useParams().buildingId;
     return (
         <Container>
             {buildingInfo.url && buildingInfo.url.length !== 0 &&
                 <StyledP>
-                    <IMG src={HOME_IMG} alt="homepage icon" />
+                    <HOME style={{ "width": "20", "height": "20", "margin-right": "8px" }} />
+                    {/* <IMG src={HOME_IMG} alt="homepage icon" /> */}
                     <LinkTo to={buildingInfo.url} target="_blank">
                         {buildingInfo.name} 홈페이지
                     </LinkTo>
                 </StyledP>
             }
-            {buildingInfo.phone !== null && <StyledP><IMG src={CALL_IMG} alt="call icon" /><LinkTo to={`tel:${buildingInfo.phone}`}>{buildingInfo.phone}</LinkTo></StyledP>}
-            {buildingId !== "30" && buildingId < 100 && (<StyledP><IMG src={LOCATION_IMG} alt="location icon" />제{buildingId}호관 {buildingInfo.office}</StyledP>)}
+            {buildingInfo.phone !== null && <StyledP><CALL style={{ "margin-right": "8px" }} /><LinkTo to={`tel:${buildingInfo.phone}`}>{buildingInfo.phone}</LinkTo></StyledP>}
+            {buildingId !== "30" && buildingId < 100 && (<StyledP><LOCATION style={{ "margin-right": "8px" }} />제{buildingId}호관 {buildingInfo.office}</StyledP>)}
         </Container>
     );
 }
