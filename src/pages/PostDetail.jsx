@@ -1,100 +1,100 @@
-import { useEffect, useRef, useState } from 'react'
-import { TopNavigation } from '../components/TopNavigation'
-import { useParams } from 'react-router-dom'
-import client from '../lib/client'
-import styled from 'styled-components'
-import { format } from 'date-fns/format'
-import { BottomSheet } from '../components/BottomSheet'
+import { useEffect, useRef, useState } from "react";
+import { TopNavigation } from "../components/TopNavigation";
+import { useParams } from "react-router-dom";
+import client from "../lib/client";
+import styled from "styled-components";
+import { format } from "date-fns/format";
+import { BottomSheet } from "../components/BottomSheet";
 
-import { ReactComponent as LikeIcon } from '../assets/icons/thumb_up.svg'
-import { ReactComponent as CommentIcon } from '../assets/icons/chat.svg'
-import { ReactComponent as ReplyCommentIcon } from '../assets/icons/prompt_suggestion.svg'
+import { ReactComponent as LikeIcon } from "../assets/icons/thumb_up.svg";
+import { ReactComponent as CommentIcon } from "../assets/icons/chat.svg";
+import { ReactComponent as ReplyCommentIcon } from "../assets/icons/prompt_suggestion.svg";
 
 export default function PostDetail() {
-  const { postId } = useParams()
+  const { postId } = useParams();
 
-  const contentRef = useRef(null)
-  const commentIdRef = useRef(null)
+  const contentRef = useRef(null);
+  const commentIdRef = useRef(null);
 
-  const [post, setPost] = useState()
-  const [comments, setComments] = useState()
-  const [replyComments, setReplyComments] = useState()
+  const [post, setPost] = useState();
+  const [comments, setComments] = useState();
+  const [replyComments, setReplyComments] = useState();
 
-  const [openCommentBottomSheet, setOpenCommentBottomSheet] = useState(false)
+  const [openCommentBottomSheet, setOpenCommentBottomSheet] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
 
-    client.interceptors.request.use(config => {
+    client.interceptors.request.use((config) => {
       config.headers = {
         ...config.headers,
         Authorization: `Bearer ${token}`,
-      }
+      };
 
-      return config
-    })
+      return config;
+    });
 
     const setPostAsync = async () => {
-      const response = await client.get(`/post/${postId}`)
-      const commentResponse = await client.get(`/post/${postId}/comment-list`)
+      const response = await client.get(`/post/${postId}`);
+      const commentResponse = await client.get(`/post/${postId}/comment-list`);
 
-      setPost(response.data)
+      setPost(response.data);
       setComments(
         commentResponse.data.commentList.filter(
           ({ parentId }) => parentId === null
         )
-      )
+      );
       setReplyComments(
         commentResponse.data.commentList.filter(
           ({ parentId }) => parentId !== null
         )
-      )
-    }
+      );
+    };
 
-    setPostAsync()
-  }, [postId])
+    setPostAsync();
+  }, [postId]);
 
   const handleCommentPost = async () => {
     await client.post(`/post/${postId}/comment`, {
       content: contentRef.current.value,
-    })
+    });
 
-    const commentResponse = await client.get(`/post/${postId}/comment-list`)
+    const commentResponse = await client.get(`/post/${postId}/comment-list`);
 
     setComments(
       commentResponse.data.commentList.filter(
         ({ parentId }) => parentId === null
       )
-    )
+    );
 
-    setOpenCommentBottomSheet(false)
-  }
+    setOpenCommentBottomSheet(false);
+  };
 
   const handleReplyCommentPost = async () => {
     await client.post(`/post/${postId}/${commentIdRef.current}/comment`, {
       content: contentRef.current.value,
-    })
+    });
 
-    const commentResponse = await client.get(`/post/${postId}/comment-list`)
+    const commentResponse = await client.get(`/post/${postId}/comment-list`);
 
     setReplyComments(
       commentResponse.data.commentList.filter(
         ({ parentId }) => parentId !== null
       )
-    )
+    );
 
-    setOpenCommentBottomSheet(false)
-  }
+    setOpenCommentBottomSheet(false);
+  };
 
   const handleLikeClick = async () => {
-    await client.put(`/post/${postId}/like`)
+    await client.put(`/post/${postId}/like`);
 
-    const postResponse = await client.get(`/post/${postId}`)
+    const postResponse = await client.get(`/post/${postId}`);
 
-    setPost(postResponse.data)
-  }
+    setPost(postResponse.data);
+  };
 
-  if (post === undefined) return null
+  if (post === undefined) return null;
 
   return (
     <Container>
@@ -103,7 +103,7 @@ export default function PostDetail() {
       <Header>
         {/* <img src={post.writerProfileImage} alt="profile" /> */}
 
-        <WriterName>{post.writerNickname ?? '익명'}</WriterName>
+        <WriterName>{post.writerNickname ?? "익명"}</WriterName>
       </Header>
 
       <ContentContainer>
@@ -138,23 +138,23 @@ export default function PostDetail() {
         comments.map(({ nickname, writeDatetime, content, commentId }) => {
           const reply = replyComments.filter(
             ({ parentId }) => parentId === commentId
-          )
+          );
 
           return (
             <>
               <CommentContainer key={commentId}>
                 <div>
-                  <CommentNickname>{nickname ?? '익명'}</CommentNickname>
+                  <CommentNickname>{nickname ?? "익명"}</CommentNickname>
                   <CommentContent>{content}</CommentContent>
                   <CommentDateTime>
-                    {format(new Date(writeDatetime), 'MM/dd HH:mm')}
+                    {format(new Date(writeDatetime), "MM/dd HH:mm")}
                   </CommentDateTime>
                 </div>
 
                 <ReplyCommentButton
                   onClick={() => {
-                    commentIdRef.current = commentId
-                    setOpenCommentBottomSheet(true)
+                    commentIdRef.current = commentId;
+                    setOpenCommentBottomSheet(true);
                   }}
                 >
                   답글 작성
@@ -166,16 +166,16 @@ export default function PostDetail() {
                   <ReplyCommentIcon />
 
                   <div>
-                    <CommentNickname>{nickname ?? '익명'}</CommentNickname>
+                    <CommentNickname>{nickname ?? "익명"}</CommentNickname>
                     <CommentContent>{content}</CommentContent>
                     <CommentDateTime>
-                      {format(new Date(writeDatetime), 'MM/dd HH:mm')}
+                      {format(new Date(writeDatetime), "MM/dd HH:mm")}
                     </CommentDateTime>
                   </div>
                 </ReplyCommentContainer>
               ))}
             </>
-          )
+          );
         })}
 
       <div style={{ height: 56 }}></div>
@@ -188,11 +188,11 @@ export default function PostDetail() {
       <BottomSheet
         height="full"
         open={openCommentBottomSheet}
-        onOpenChange={open => {
+        onOpenChange={(open) => {
           if (!open && commentIdRef.current) {
-            commentIdRef.current = undefined
+            commentIdRef.current = undefined;
           }
-          setOpenCommentBottomSheet(open)
+          setOpenCommentBottomSheet(open);
         }}
       >
         <BottomSheetContent>
@@ -203,19 +203,19 @@ export default function PostDetail() {
               variant="primary"
               onClick={() => {
                 if (commentIdRef.current) {
-                  handleReplyCommentPost()
+                  handleReplyCommentPost();
                 } else {
-                  handleCommentPost()
+                  handleCommentPost();
                 }
               }}
             >
-              {commentIdRef.current ? '답글 등록' : '댓글 등록'}
+              {commentIdRef.current ? "답글 등록" : "댓글 등록"}
             </Button>
           </CommentPostButtonContainer>
         </BottomSheetContent>
       </BottomSheet>
     </Container>
-  )
+  );
 }
 
 const Container = styled.div`
@@ -223,24 +223,24 @@ const Container = styled.div`
   flex-direction: column;
   width: 100vw;
   padding: 24px 16px 0px;
-`
+`;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const WriterName = styled.span`
   font-size: 18px;
   font-weight: 500;
   color: #111111;
-`
+`;
 
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 12px;
-`
+`;
 
 const Title = styled.span`
   font-size: 20px;
@@ -249,7 +249,7 @@ const Title = styled.span`
   color: #111111;
   word-break: keep-all;
   white-space: pre-wrap;
-`
+`;
 
 const Content = styled.p`
   font-size: 16px;
@@ -259,7 +259,7 @@ const Content = styled.p`
   margin: 16px 0 24px;
   word-break: keep-all;
   white-space: pre-wrap;
-`
+`;
 
 const LikeAndCommentInfoContainer = styled.div`
   display: flex;
@@ -271,7 +271,7 @@ const LikeAndCommentInfoContainer = styled.div`
     display: flex;
     align-items: center;
   }
-`
+`;
 
 const LikeAndComment = styled.span`
   display: flex;
@@ -284,7 +284,7 @@ const LikeAndComment = styled.span`
     font-weight: 400;
     color: #505050;
   }
-`
+`;
 
 const LikeButton = styled.button`
   font-size: 16px;
@@ -296,7 +296,7 @@ const LikeButton = styled.button`
   padding: 4px 12px;
   margin-top: 12px;
   width: fit-content;
-`
+`;
 
 const CommentInputContainer = styled.div`
   position: fixed;
@@ -305,7 +305,7 @@ const CommentInputContainer = styled.div`
   height: 80px;
   width: 100vw;
   padding: 16px;
-`
+`;
 
 const CommentInput = styled.button`
   border: none;
@@ -319,7 +319,7 @@ const CommentInput = styled.button`
   font-size: 14px;
   font-weight: 500;
   color: #767676;
-`
+`;
 
 const Divider = styled.div`
   margin: 0px -16px;
@@ -327,7 +327,7 @@ const Divider = styled.div`
   width: 100vw;
   background-color: #f1f1f5;
   height: 16px;
-`
+`;
 
 const CommentContainer = styled.div`
   padding: 12px 0px;
@@ -335,7 +335,7 @@ const CommentContainer = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-`
+`;
 
 const ReplyCommentContainer = styled.div`
   padding: 12px 0px;
@@ -343,7 +343,7 @@ const ReplyCommentContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 12px;
-`
+`;
 
 const ReplyCommentButton = styled.button`
   font-size: 16px;
@@ -355,14 +355,14 @@ const ReplyCommentButton = styled.button`
   padding: 4px 12px;
   margin-top: 12px;
   width: fit-content;
-`
+`;
 
 const CommentNickname = styled.span`
   font-size: 16px;
   font-weight: 600;
   color: #111111;
   line-height: 24px;
-`
+`;
 
 const CommentContent = styled.p`
   font-size: 16px;
@@ -372,21 +372,21 @@ const CommentContent = styled.p`
   margin: 4px 0px 4px;
   word-break: keep-all;
   white-space: pre-wrap;
-`
+`;
 
 const CommentDateTime = styled.span`
   font-size: 12px;
   font-weight: 400;
   color: #999999;
   line-height: 18px;
-`
+`;
 
 const BottomSheetContent = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 
 const ContentTextarea = styled.textarea`
   width: calc(100vw - 32px);
@@ -399,13 +399,13 @@ const ContentTextarea = styled.textarea`
   font-size: 16px;
   line-height: 24px;
   resize: none;
-`
+`;
 
 const CommentPostButtonContainer = styled.div`
   margin-top: 24px;
   padding: 0px 16px;
   width: 100%;
-`
+`;
 
 const Button = styled.button`
   border: none;
@@ -422,4 +422,4 @@ const Button = styled.button`
   width: 100%;
   background-color: ${({ theme }) => theme.primaryColor};
   color: #ffffff;
-`
+`;
