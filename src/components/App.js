@@ -38,6 +38,7 @@ function App() {
           <Route path="/markerPosting" element={<MarkerPosting />} />
           <Route path="/posting" element={<Posting />} />
           <Route path="/posting/:postId" element={<Posting />} />
+          <Route path="/posting/:buildingId" element={<Posting />} />
           <Route path="/posts/weeklyPosts" element={<WeeklyPosts />} />
           <Route path="/post/:postId" element={<PostDetail />} />
           <Route path="/myPosts" element={<MyPosts />} />

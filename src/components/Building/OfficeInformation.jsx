@@ -3,11 +3,11 @@ import { Link, useParams } from "react-router-dom";
 import { ReactComponent as HOME } from "../../assets/icons/other_houses.svg"
 import { ReactComponent as CALL } from "../../assets/icons/call.svg"
 import { ReactComponent as LOCATION } from "../../assets/icons/location_on.svg"
-export default function OfficeInformation({ buildingInfo }) {
+export default function OfficeInformation({ buildingInfo, children }) {
     const buildingId = useParams().buildingId;
     return (
         <Container>
-            {buildingInfo.url && buildingInfo.url.length !== 0 &&
+            {buildingInfo.url && buildingInfo.url.length !== 0 && <>
                 <StyledP>
                     <HOME style={{ "width": "20", "height": "20", "margin-right": "8px" }} />
                     {/* <IMG src={HOME_IMG} alt="homepage icon" /> */}
@@ -15,7 +15,12 @@ export default function OfficeInformation({ buildingInfo }) {
                         {buildingInfo.name} 홈페이지
                     </LinkTo>
                 </StyledP>
+                <Spacing></Spacing>
+            </>
+
             }
+            <StyledP>{children}</StyledP>
+
             {buildingInfo.phone !== null && <StyledP><CALL style={{ "margin-right": "8px" }} /><LinkTo to={`tel:${buildingInfo.phone}`}>{buildingInfo.phone}</LinkTo></StyledP>}
             {buildingId !== "30" && buildingId < 100 && (<StyledP><LOCATION style={{ "margin-right": "8px" }} />제{buildingId}호관 {buildingInfo.office}</StyledP>)}
         </Container>
@@ -55,4 +60,8 @@ Link {
 const LinkTo = styled(Link)`
 text-decoration: none;
 color: #3366BB;
+`
+
+const Spacing = styled.div`
+height: 8px;
 `

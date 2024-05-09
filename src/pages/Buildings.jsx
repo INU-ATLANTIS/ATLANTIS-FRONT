@@ -277,8 +277,6 @@ export default function Buildings() {
         setSearchIndex(index)
         setSelectedInfo("search")
 
-
-
       } else {
         alert("건물 정보가 없습니다.")
         return
