@@ -33,12 +33,12 @@ export default function ShortCut({ phone, homepage, floor }) {
     }, []);
 
     return (<>
-        <ButtonContainer>
-            <Linkto to={`tel:${phone}`}>
+        {phone !== null && <ButtonContainer>
+            {phone !== null && <Linkto to={`tel:${phone}`}>
                 <Button><img src={CALL_IMG} alt="call button"></img>
                     전화번호
                 </Button>
-            </Linkto>
+            </Linkto>}
             {homepage !== null && homepage.length !== 0 && <Linkto to={homepage} target="_blank">
                 <Button>
                     <img src={HOUSE_IMG} alt="Homepage button"></img>
@@ -51,7 +51,7 @@ export default function ShortCut({ phone, homepage, floor }) {
                     층별 안내
                 </Button>
             </Linkto>}
-        </ButtonContainer >
+        </ButtonContainer >}
         <Blank></Blank>
     </>
     );
