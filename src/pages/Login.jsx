@@ -1,18 +1,18 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
-import { Link, useNavigate } from 'react-router-dom'
-import arrow from '../assets/ArrowLeft.png'
-import mailImg from '../assets/Vector.png'
-import passwordImg from '../assets/Lock.png'
-import Input from '../components/Input'
-import Checkbox from '../components/Checkbox'
-import { useState } from 'react'
-import client from '../lib/client'
+import { Link, useNavigate } from "react-router-dom";
+import arrow from "../assets/ArrowLeft.png";
+import mailImg from "../assets/Vector.png";
+import passwordImg from "../assets/Lock.png";
+import Input from "../components/Input";
+import Checkbox from "../components/Checkbox";
+import { useState } from "react";
+import client from "../lib/client";
 
 const Container = styled.div`
   width: 400px;
   margin: auto auto;
-`
+`;
 
 const Header = styled.div`
   display: flex;
@@ -20,29 +20,29 @@ const Header = styled.div`
   margin: 30px auto 80px;
   padding: 0 10px;
   font-size: 22px;
-`
+`;
 
-const Span = styled(Link)``
+const Span = styled(Link)``;
 
 const Arrow = styled.img`
   width: 24px;
-`
+`;
 
 const Title = styled.div`
   flex-grow: 1;
   text-align: center;
   margin-right: 15px;
-`
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-`
+`;
 
 const Label = styled.label`
   color: #585858;
   padding: 0 10px;
-`
+`;
 
 const Button = styled(Link)`
   background-color: #004a9e;
@@ -64,7 +64,7 @@ const Button = styled(Link)`
   &:active {
     background-color: #16457a;
   }
-`
+`;
 
 const IdContainer = styled.div`
   display: flex;
@@ -73,9 +73,9 @@ const IdContainer = styled.div`
   padding: 0 20px;
   color: #585858;
   font-size: 15px;
-`
+`;
 
-const FindLabel = styled.label``
+const FindLabel = styled.label``;
 
 const Question = styled.div`
   display: flex;
@@ -90,43 +90,47 @@ const Question = styled.div`
   bottom: 0;
   width: 100%;
   padding: 30px;
-`
+`;
 
 const Linkto = styled(Link)`
   color: #004a9e;
   text-decoration: none;
   margin-left: 5px;
-`
+`;
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [id, setId] = useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [id, setId] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  function handleFindPassword() {
+    navigate("/findpassword");
+  }
 
   const login = async () => {
     try {
       const response = await client.post(`/auth/sign-in`, {
         email: email,
         password: password,
-      })
+      });
 
-      if (response.data.code === 'SU') {
-        alert('로그인 성공')
-        localStorage.setItem('token', response.data.token)
-        navigate('/home')
+      if (response.data.code === "SU") {
+        alert("로그인 성공");
+        localStorage.setItem("token", response.data.token);
+        navigate("/home");
       } else {
-        alert(response.data.message)
+        alert(response.data.message);
       }
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message)
+        alert(error.response.data.message);
       } else {
-        alert('로그인 요청 중 오류가 발생했습니다.')
+        alert("로그인 요청 중 오류가 발생했습니다.");
       }
     }
-  }
+  };
 
   return (
     <Container>
@@ -144,7 +148,7 @@ function Login() {
             type="email"
             placeholder="이메일을 입력해 주세요"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <Label>비밀번호</Label>
@@ -154,7 +158,7 @@ function Login() {
             type="password"
             placeholder="비밀번호를 입력해주세요"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <Button onClick={login}>로그인</Button>
@@ -162,14 +166,14 @@ function Login() {
           <Checkbox checked={id} onChange={() => setId(!id)}>
             아이디 저장
           </Checkbox>
-          <FindLabel>아이디/비밀번호 찾기</FindLabel>
+          <FindLabel onClick={handleFindPassword}>비밀번호 찾기</FindLabel>
         </IdContainer>
       </Form>
       <Question>
         아직 회원이 아니신가요? <Linkto to="/JoinSpace">회원가입</Linkto>
       </Question>
     </Container>
-  )
+  );
 }
 
-export default Login
+export default Login;
