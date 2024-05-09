@@ -54,7 +54,6 @@ export default function Buildings() {
     const fetchBuildingList = async () => {
       try {
         const buildingList = await fetchBuilding()
-        console.log(buildingList)
         setBuildingList(buildingList)
         setIsFetching(false)
       } catch (err) {
