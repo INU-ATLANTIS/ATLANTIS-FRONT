@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Post from "./Post.jsx";
+import { PostListItem } from "../PostListItem.jsx";
 import { fetchPosts } from "../../http.js";
 
 export default function Posts({ show, clickMore }) {
@@ -44,13 +44,8 @@ export default function Posts({ show, clickMore }) {
         for (let i = 0; i < iter; i++) {
             const post = postList[i];
             postElement.push(
-                <Post key={post.postId} post={post} />
+                <PostListItem {...post} />
             );
-            if (i !== (iter - 1)) {
-                postElement.push(
-                    <div style={{ width: '100%', height: '1px', backgroundColor: '#F1F1F5', margin: '16px 0px' }}></div>
-                )
-            }
         }
     }
 
@@ -64,11 +59,11 @@ export default function Posts({ show, clickMore }) {
                 </h2>
             </Title>
             {isFetching && <p>...Loading</p>}
-            {postElement}
+            <PostList>
+                {postElement}
+            </PostList>
             {!isFetching && show !== undefined && postList?.length !== 0 && (
                 <>
-                    <div id="spacing" style={{ padding: '40px 0 0 0' }}></div>
-
                     <div style={{ margin: "0px 10px" }}>
                         <Button onClick={() => clickMore("post")}>더보기</Button>
                     </div>
@@ -108,4 +103,17 @@ height: 52px;
 background: #F7F7FB;
 border-radius: 12px;
 border: none;
+`
+
+const PostList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-bottom: 80px;
+  width: 100vw;
+
+  li {
+    padding: 16px;
+    border-top: 1px solid #f1f1f5;
+  }
 `

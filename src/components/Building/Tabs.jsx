@@ -5,6 +5,7 @@ import Office from "./Office.jsx";
 import Divider from "../Divider.jsx";
 import Floor from "./Floor.jsx";
 import Posts from "./Posts.jsx";
+import { PostFAB } from "../PostFAB.jsx"
 
 
 export default function Tabs({ buildingInfo }) {
@@ -37,6 +38,7 @@ export default function Tabs({ buildingInfo }) {
             )}
             {selectedTab === "post" && (<>
                 <Posts />
+                <PostFAB postMode="post" buildingId={buildingInfo.buildingId} />
             </>
             )}
             {selectedTab === "floor" && (<>

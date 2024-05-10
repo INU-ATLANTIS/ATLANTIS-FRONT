@@ -54,7 +54,6 @@ export default function Buildings() {
     const fetchBuildingList = async () => {
       try {
         const buildingList = await fetchBuilding()
-        console.log(buildingList)
         setBuildingList(buildingList)
         setIsFetching(false)
       } catch (err) {
@@ -79,180 +78,182 @@ export default function Buildings() {
     setMap(map)
     map.setMaxLevel(4)
 
-    const markers = []
-    if (selectedInfo === "building") {
-      let imageSrc = BUILDING, // 마커이미지의 주소입니다
-        imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
+    if (buildingList !== null) {
+      const markers = []
+      if (selectedInfo === "building") {
+        let imageSrc = BUILDING, // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
 
-      let markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize
-      );
-      !isFetching &&
-        !error &&
-        buildingList.filter(building => building.buildingId < 100).forEach((building, index) => {
-          const latlng = new kakao.maps.LatLng(building.y, building.x)
-          const marker = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
-            position: latlng, // 마커를 표시할 위치
-            title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-            image: markerImage
-          })
-          markers.push(marker)
+        let markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize
+        );
+        !isFetching &&
+          !error &&
+          buildingList.filter(building => building.buildingId < 100).forEach((building, index) => {
+            const latlng = new kakao.maps.LatLng(building.y, building.x)
+            const marker = new kakao.maps.Marker({
+              map: map, // 마커를 표시할 지도
+              position: latlng, // 마커를 표시할 위치
+              title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+              image: markerImage
+            })
+            markers.push(marker)
 
-          kakao.maps.event.addListener(marker, 'click', () => {
-            if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
-              setOpen(true)
-              const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
-              setSelectedMarker(markerIndex)
-            }
+            kakao.maps.event.addListener(marker, 'click', () => {
+              if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
+                setOpen(true)
+                const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
+                setSelectedMarker(markerIndex)
+              }
+            })
           })
+      } else if (selectedInfo === "cafe") {
+        let imageSrc = CAFE, // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
+
+        let markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize
+        );
+        !isFetching &&
+          !error &&
+          buildingList.filter(building => (building.buildingId >= 100 && building.buildingId < 200)).forEach((building, index) => {
+            const latlng = new kakao.maps.LatLng(building.y, building.x)
+            const marker = new kakao.maps.Marker({
+              map: map, // 마커를 표시할 지도
+              position: latlng, // 마커를 표시할 위치
+              title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+              image: markerImage
+            })
+            markers.push(marker)
+
+            kakao.maps.event.addListener(marker, 'click', () => {
+              if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
+                setOpen(true)
+                const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
+                setSelectedMarker(markerIndex)
+              }
+            })
+          })
+      } else if (selectedInfo === "restaurant") {
+        let imageSrc = RESTAURANT, // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
+
+        let markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize
+        );
+        !isFetching &&
+          !error &&
+          buildingList.filter(building => (building.buildingId >= 200 && building.buildingId < 300)).forEach((building, index) => {
+            const latlng = new kakao.maps.LatLng(building.y, building.x)
+            const marker = new kakao.maps.Marker({
+              map: map, // 마커를 표시할 지도
+              position: latlng, // 마커를 표시할 위치
+              title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+              image: markerImage
+            })
+            markers.push(marker)
+
+            kakao.maps.event.addListener(marker, 'click', () => {
+              if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
+                setOpen(true)
+                const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
+                setSelectedMarker(markerIndex)
+              }
+            })
+          })
+      } else if (selectedInfo === "conven") {
+        let imageSrc = STORE, // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
+
+        let markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize
+        );
+
+        !isFetching &&
+          !error &&
+          buildingList.filter(building => (building.buildingId >= 300 && building.buildingId < 400)).forEach((building, index) => {
+            const latlng = new kakao.maps.LatLng(building.y, building.x)
+            const marker = new kakao.maps.Marker({
+              map: map, // 마커를 표시할 지도
+              position: latlng, // 마커를 표시할 위치
+              title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+              image: markerImage
+            })
+            markers.push(marker)
+
+            kakao.maps.event.addListener(marker, 'click', () => {
+              if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
+                setOpen(true)
+                const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
+                setSelectedMarker(markerIndex)
+              }
+            })
+          })
+      } else if (selectedInfo === "etc") {
+        let imageSrc = ETC, // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
+
+
+        let markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize
+        );
+
+        !isFetching &&
+          !error &&
+          buildingList.filter(building => (building.buildingId >= 400 && building.buildingId < 500)).forEach((building, index) => {
+            const latlng = new kakao.maps.LatLng(building.y, building.x)
+            const marker = new kakao.maps.Marker({
+              map: map, // 마커를 표시할 지도
+              position: latlng, // 마커를 표시할 위치
+              title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+              image: markerImage
+            })
+            markers.push(marker)
+
+            kakao.maps.event.addListener(marker, 'click', () => {
+              if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
+                setOpen(true)
+                const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
+                setSelectedMarker(markerIndex)
+              }
+            })
+          })
+      } else if (selectedInfo === "search") {
+        let imageSrc = BUILDING, // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
+
+        let markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize
+        );
+        console.log(searchIndex)
+        const latlng = new kakao.maps.LatLng(buildingList[searchIndex].y, buildingList[searchIndex].x)
+        const marker = new kakao.maps.Marker({
+          map: map, // 마커를 표시할 지도
+          position: latlng, // 마커를 표시할 위치
+          title: buildingList[searchIndex].name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+          image: markerImage
         })
-    } else if (selectedInfo === "cafe") {
-      let imageSrc = CAFE, // 마커이미지의 주소입니다
-        imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
+        markers.push(marker)
 
-      let markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize
-      );
-      !isFetching &&
-        !error &&
-        buildingList.filter(building => (building.buildingId >= 100 && building.buildingId < 200)).forEach((building, index) => {
-          const latlng = new kakao.maps.LatLng(building.y, building.x)
-          const marker = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
-            position: latlng, // 마커를 표시할 위치
-            title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-            image: markerImage
-          })
-          markers.push(marker)
-
-          kakao.maps.event.addListener(marker, 'click', () => {
-            if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
-              setOpen(true)
-              const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
-              setSelectedMarker(markerIndex)
-            }
-          })
+        kakao.maps.event.addListener(marker, 'click', () => {
+          if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === buildingList[searchIndex].buildingId)) {
+            setOpen(true)
+            setSelectedMarker(searchIndex)
+          }
         })
-    } else if (selectedInfo === "restaurant") {
-      let imageSrc = RESTAURANT, // 마커이미지의 주소입니다
-        imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
 
-      let markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize
-      );
-      !isFetching &&
-        !error &&
-        buildingList.filter(building => (building.buildingId >= 200 && building.buildingId < 300)).forEach((building, index) => {
-          const latlng = new kakao.maps.LatLng(building.y, building.x)
-          const marker = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
-            position: latlng, // 마커를 표시할 위치
-            title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-            image: markerImage
-          })
-          markers.push(marker)
+        const moveLatLon = new kakao.maps.LatLng(buildingList[searchIndex].y, buildingList[searchIndex].x)
+        map.panTo(moveLatLon)
 
-          kakao.maps.event.addListener(marker, 'click', () => {
-            if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
-              setOpen(true)
-              const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
-              setSelectedMarker(markerIndex)
-            }
-          })
-        })
-    } else if (selectedInfo === "conven") {
-      let imageSrc = STORE, // 마커이미지의 주소입니다
-        imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
-
-      let markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize
-      );
-
-      !isFetching &&
-        !error &&
-        buildingList.filter(building => (building.buildingId >= 300 && building.buildingId < 400)).forEach((building, index) => {
-          const latlng = new kakao.maps.LatLng(building.y, building.x)
-          const marker = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
-            position: latlng, // 마커를 표시할 위치
-            title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-            image: markerImage
-          })
-          markers.push(marker)
-
-          kakao.maps.event.addListener(marker, 'click', () => {
-            if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
-              setOpen(true)
-              const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
-              setSelectedMarker(markerIndex)
-            }
-          })
-        })
-    } else if (selectedInfo === "etc") {
-      let imageSrc = ETC, // 마커이미지의 주소입니다
-        imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
-
-
-      let markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize
-      );
-
-      !isFetching &&
-        !error &&
-        buildingList.filter(building => (building.buildingId >= 400 && building.buildingId < 500)).forEach((building, index) => {
-          const latlng = new kakao.maps.LatLng(building.y, building.x)
-          const marker = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
-            position: latlng, // 마커를 표시할 위치
-            title: building.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-            image: markerImage
-          })
-          markers.push(marker)
-
-          kakao.maps.event.addListener(marker, 'click', () => {
-            if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === building.buildingId)) {
-              setOpen(true)
-              const markerIndex = buildingList.findIndex((b) => b.buildingId === building.buildingId)
-              setSelectedMarker(markerIndex)
-            }
-          })
-        })
-    } else if (selectedInfo === "search") {
-      let imageSrc = BUILDING, // 마커이미지의 주소입니다
-        imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
-
-      let markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize
-      );
-      console.log(searchIndex)
-      const latlng = new kakao.maps.LatLng(buildingList[searchIndex].y, buildingList[searchIndex].x)
-      const marker = new kakao.maps.Marker({
-        map: map, // 마커를 표시할 지도
-        position: latlng, // 마커를 표시할 위치
-        title: buildingList[searchIndex].name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-        image: markerImage
-      })
-      markers.push(marker)
-
-      kakao.maps.event.addListener(marker, 'click', () => {
-        if (selectedMarker === null || selectedMarker !== buildingList.findIndex((b) => b.buildingId === buildingList[searchIndex].buildingId)) {
-          setOpen(true)
-          setSelectedMarker(searchIndex)
-        }
-      })
-
-      const moveLatLon = new kakao.maps.LatLng(buildingList[searchIndex].y, buildingList[searchIndex].x)
-      map.panTo(moveLatLon)
-
-      setSelectedMarker(searchIndex)
-      setOpen(true)
+        setSelectedMarker(searchIndex)
+        setOpen(true)
+      }
     }
   }, [buildingList, selectedInfo, searchIndex])
 
@@ -274,8 +275,6 @@ export default function Buildings() {
 
         setSearchIndex(index)
         setSelectedInfo("search")
-
-
 
       } else {
         alert("건물 정보가 없습니다.")

@@ -1,11 +1,11 @@
 import styled, { css } from "styled-components";
-import CALL_IMG from "../../assets/call.png";
+import { ReactComponent as CALL } from "../../assets/icons/call.svg"
 import { Link } from "react-router-dom";
 
 export default function ConvenInfo({ index, children, prop }) {
     return (<>
         <Div active={(index !== 0)}>{children}</Div>
-        {prop.phone !== null && prop.phone.length > 0 && <StyledP><IMG src={CALL_IMG} alt="call icon" /><LinkTo to={`tel:${prop.phone}`}>{prop.phone}</LinkTo></StyledP>}
+        {prop.phone !== null && prop.phone.length > 0 && <StyledP><CALL /><LinkTo to={`tel:${prop.phone}`}>{prop.phone}</LinkTo></StyledP>}
     </>
     )
 }

@@ -32,6 +32,7 @@ export function BottomNavigation() {
           active={pathname.includes("loginUserInfo")}
           to="/loginUserInfo"
         >
+
           <LocationCity />
 
           <Label>내 정보</Label>

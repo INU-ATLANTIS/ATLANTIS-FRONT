@@ -24,7 +24,6 @@ export default function Floor({ title }) {
         const fetchFloorList = async () => {
             try {
                 const list = await fetchFloorImgs(buildingId);
-                console.log(list.srcList);
                 if (list.code === "SU") {
                     setFloorList(list.srcList);
                     setIsFetching(false);

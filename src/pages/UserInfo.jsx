@@ -103,7 +103,8 @@ function UserInfo() {
       <Container>
         <GlobalStyle />
         <Header>
-          <Span to="/Home">
+          <Span to="/ome">
+
             <Arrow src={arrow} alt="이전" />
           </Span>
           <Title>유저 정보</Title>

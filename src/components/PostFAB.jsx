@@ -1,14 +1,16 @@
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-export function PostFAB({ postMode }) {
+export function PostFAB({ postMode, buildingId }) {
   const navigate = useNavigate()
-
   const handleClick = () => {
     if (postMode === 'marker') {
       navigate('/markerPosting')
     } else {
-      navigate('/posting')
+      if (buildingId) {
+        navigate(`/posting`, { state: { buildingId } })
+      }
+      else navigate('/posting')
     }
   }
 
