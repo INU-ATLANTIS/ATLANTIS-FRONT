@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import client from "../lib/client";
 import { Link } from "react-router-dom";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { Avatar } from "antd";
@@ -68,8 +68,7 @@ const UserContainer = styled.div`
 `;
 
 function UserInfo() {
-  const email = "bkw0820@inu.ac.kr";
-  const BASE_URL = `http://13.209.42.36:4000/api/v1/user/${email}`;
+  const email = "";
   const [userInfo, setUserInfo] = useState({
     email: "",
     nickname: "",
@@ -81,7 +80,7 @@ function UserInfo() {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(BASE_URL, {
+        const response = await client.get(`/user/${email}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const fetchedProfileImage = response.data.profileImage || profileImg;
@@ -104,7 +103,8 @@ function UserInfo() {
       <Container>
         <GlobalStyle />
         <Header>
-          <Span to="/home">
+          <Span to="/ome">
+
             <Arrow src={arrow} alt="이전" />
           </Span>
           <Title>유저 정보</Title>

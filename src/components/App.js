@@ -14,6 +14,8 @@ import MyPosts from "../pages/MyPosts";
 import Posting from "../pages/Posting";
 import FindPassword from "./FindPassword";
 import UserInfo from "../pages/UserInfo";
+import LoginUserInfo from "../pages/LoginUserInfo";
+import ChangeNickname from "../pages/ChangeNickname";
 
 const theme = {
   primaryColor: "#004A92",
@@ -39,7 +41,9 @@ function App() {
           <Route path="/posts/weeklyPosts" element={<WeeklyPosts />} />
           <Route path="/post/:postId" element={<PostDetail />} />
           <Route path="/myPosts" element={<MyPosts />} />
-          <Route path="/user" element={<UserInfo />} />
+          <Route path="/userInfo" element={<UserInfo />} />
+          <Route path="/loginUserInfo" element={<LoginUserInfo />} />
+          <Route path="/changeNickname" element={<ChangeNickname />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

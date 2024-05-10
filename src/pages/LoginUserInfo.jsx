@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import client from "../lib/client";
 import { Link } from "react-router-dom";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { Avatar } from "antd";
@@ -118,7 +118,6 @@ const Button = styled(Link)`
 `;
 
 function LoginUserInfo() {
-  const BASE_URL = "http://13.209.42.36:4000";
   const [userInfo, setUserInfo] = useState({
     email: "",
     nickname: "",
@@ -144,15 +143,6 @@ function LoginUserInfo() {
     }
   };
 
-  /*const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setImage(reader.result);
-      }
-    };
-    reader.readAsDataURL(e.target.files[0]);
-  };*/
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/";
@@ -164,15 +154,11 @@ function LoginUserInfo() {
     formData.append("file", file);
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/v1/file/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await client.post(`/file/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("Server response:", response);
       return response.data;
     } catch (error) {
@@ -185,16 +171,14 @@ function LoginUserInfo() {
   const updateProfileImage = async (imageUrl) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.patch(
-        `${BASE_URL}/api/v1/user/profileimage`,
+      const response = await client.patch(
+        `/user/profileimage`,
         { profileImage: imageUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // URL에 타임스탬프 쿼리 파라미터를 추가하여 이미지 캐시를 우회
       const timestamp = new Date().getTime();
       const updatedImageUrl = `${imageUrl}?t=${timestamp}`;
 
-      // 사용자 상태 정보를 업데이트하여 UI에 변경된 이미지 반영
       setUserInfo((prevState) => ({
         ...prevState,
         profileImage: updatedImageUrl,
@@ -222,7 +206,7 @@ function LoginUserInfo() {
         return;
       }
 
-      await axios.delete(`${BASE_URL}/api/v1/auth/delete-account`, {
+      await client.delete(`/auth/delete-account`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -247,7 +231,7 @@ function LoginUserInfo() {
           );
           return;
         }
-        const response = await axios.get(`${BASE_URL}/api/v1/user`, {
+        const response = await client.get(`/user`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const { email, nickname, profileImage } = response.data;
@@ -267,7 +251,7 @@ function LoginUserInfo() {
       <Container>
         <GlobalStyle />
         <Header>
-          <Span to="/">
+          <Span to="/Home">
             <Arrow src={arrow} alt="이전" />
           </Span>
           <Title>로그인 유저 정보</Title>

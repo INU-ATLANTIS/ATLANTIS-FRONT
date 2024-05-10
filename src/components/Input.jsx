@@ -1,11 +1,5 @@
 import styled from "styled-components";
 
-const Icon = styled.img`
-  height: 18px;
-  width: 18px;
-  margin-right: 8px;
-`;
-
 const InputContainer = styled.div`
   background-color: #f6f6f6;
   border: 1px solid #eeeeee;
@@ -31,10 +25,9 @@ const StyledInput = styled.input`
   }
 `;
 
-function Input({ icon, placeholder, value, onChange, type }) {
+function Input({ placeholder, value, onChange, type }) {
   return (
     <InputContainer>
-      <Icon src={icon} alt="icon" />
       <StyledInput
         placeholder={placeholder}
         value={value}
