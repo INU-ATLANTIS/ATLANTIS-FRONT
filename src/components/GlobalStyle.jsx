@@ -6,7 +6,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard' !important;
     background-color: ${({ theme }) => theme.backgroundColor};
     color: ${({ theme }) => theme.color};
     margin: 0;
