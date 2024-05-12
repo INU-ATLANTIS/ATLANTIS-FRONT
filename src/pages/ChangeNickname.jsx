@@ -1,79 +1,113 @@
 import React, { useState } from "react";
 import client from "../lib/client";
 import { Link } from "react-router-dom";
-import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import arrow from "../assets/ArrowLeft.png";
-import Input from "../components/Input";
-
-const GlobalStyle = createGlobalStyle`
-  * { box-sizing: border-box; }
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: ${({ theme }) => theme.backgroundColor};
-    color: ${({ theme }) => theme.color};
-  }
-`;
-const THEMES = {
-  light: { backgroundColor: "#ffffff", color: "#000000" },
-  dark: { backgroundColor: "#03040c", color: "#ffffff" },
-};
+import { TopNavigation } from "../components/TopNavigation";
+import { BottomNavigation } from "../components/BottomNavigation";
 
 const Container = styled.div`
-  width: 400px;
-  margin: auto;
-`;
-const Header = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin: 30px auto 80px;
-  padding: 0 10px;
-  font-size: 22px;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  padding: 0 16px;
 `;
-const Arrow = styled.img`
-  width: 24px;
-`;
-const Title = styled.div`
-  flex-grow: 1;
-  text-align: center;
-  margin-right: 15px;
-`;
-const Span = styled(Link)``;
 
-const Form = styled.form`
+const Top = styled.div`
+  padding: 20px 16px 0px;
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 600;
+  color: #111111;
+`;
+
+const InputContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  text-align: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0px 16px;
+`;
+
+const Input = styled.input`
+  border: none;
+  font-size: 20px;
+  line-height: 34px;
+  color: #111111;
+  margin: 0;
+
+  &::placeholder {
+    color: #999999;
+  }
+`;
+
+const InputBottomLine = styled.div`
+  width: 100%;
+  height: 2px;
+  background-color: #f1f1f5;
+`;
+
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 220px;
+  padding: 16px;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
 `;
 
 const Button = styled(Link)`
-  background-color: #004a9e;
   border: none;
-  border-radius: ${({ $round }) => ($round ? `9999px` : `8px`)};
+  border-radius: 12px;
   color: #ffffff;
-  cursor: pointer;
   font-size: 16px;
-  padding: 0 16px;
-  width: 80px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 20px 0 0;
+  line-height: 24px;
+  min-height: 52px;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 20px 0;
 
-  &:hover,
-  &:active {
-    background-color: #16457a;
-  }
+  ${({ theme }) => css`
+    background-color: ${theme.primaryColor};
+  `};
+`;
+
+const ClearButton = styled(Link)`
+  border: none;
+  border-radius: 12px;
+  text-decoration: none;
+  height: 52px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  width: 100%;
+
+  ${({ theme, variant }) =>
+    variant === "primary"
+      ? css`
+          background-color: ${theme.primaryColor};
+          color: #ffffff;
+        `
+      : css`
+          background-color: #ecf2ff;
+          color: #185aff;
+        `}
 `;
 
 function ChangeNickname() {
   const [newNickname, setNewNickname] = useState("");
   const navigate = useNavigate();
 
-  // 닉네임 수정 함수
   const updateNickname = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -91,27 +125,49 @@ function ChangeNickname() {
       alert("닉네임 변경에 실패했습니다.");
     }
   };
+
+  const handleNicknameReset = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await client.patch(
+        "/user/nickname",
+        { nickname: "익명" },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.status === 200) {
+        alert("닉네임이 초기화되었습니다.");
+        navigate("/LoginUserInfo");
+      } else {
+        throw new Error(`Failed to reset nickname: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("닉네임 초기화 실패:", error);
+      alert("닉네임 초기화 실패: " + error.message);
+    }
+  };
+
   return (
-    <ThemeProvider theme={THEMES["light"]}>
-      <Container>
-        <GlobalStyle />
-        <Header>
-          <Span to="/loginUserInfo">
-            <Arrow src={arrow} alt="이전" />
-          </Span>
-          <Title>닉네임 변경</Title>
-        </Header>
-        <Form>
-          <Input
-            type="text"
-            placeholder="새 닉네임"
-            value={newNickname}
-            onChange={(e) => setNewNickname(e.target.value)}
-          />
-          <Button onClick={updateNickname}>변경</Button>
-        </Form>
-      </Container>
-    </ThemeProvider>
+    <Container>
+      <TopNavigation />
+      <Top>닉네임 변경</Top>
+      <div style={{ height: 20 }}></div>
+      <InputContainer>
+        <Input
+          type="text"
+          placeholder="새 닉네임"
+          value={newNickname}
+          onChange={(e) => setNewNickname(e.target.value)}
+        />
+        <InputBottomLine />
+      </InputContainer>
+      <BottomContainer>
+        <ClearButton onClick={handleNicknameReset}>닉네임 초기화</ClearButton>
+        <Button onClick={updateNickname}>변경</Button>
+      </BottomContainer>
+      <BottomNavigation />
+    </Container>
   );
 }
 

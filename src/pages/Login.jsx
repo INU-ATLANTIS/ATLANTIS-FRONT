@@ -1,97 +1,94 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import { Link, useNavigate } from "react-router-dom";
-import arrow from "../assets/ArrowLeft.png";
-import Input from "../components/Input";
 import Checkbox from "../components/Checkbox";
 import { useState, useEffect } from "react";
 import client from "../lib/client";
+import { TopNavigation } from "../components/TopNavigation";
 
 const Container = styled.div`
-  width: 400px;
-  margin: auto auto;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 30px auto 80px;
-  padding: 0 10px;
-  font-size: 22px;
-`;
-
-const Span = styled(Link)``;
-
-const Arrow = styled.img`
-  width: 24px;
-`;
-
-const Title = styled.div`
-  flex-grow: 1;
-  text-align: center;
-  margin-right: 15px;
-`;
-
-const Form = styled.form`
   display: flex;
   flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+`;
+
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 118px;
+  padding: 16px;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+`;
+
+const Top = styled.div`
+  padding: 20px 16px 0px;
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 600;
+  color: #111111;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0px 16px;
 `;
 
 const Label = styled.label`
-  color: #585858;
-  padding: 0 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #505050;
 `;
 
-const Button = styled(Link)`
-  background-color: #004a9e;
+const Input = styled.input`
   border: none;
-  border-radius: ${({ $round }) => ($round ? `9999px` : `8px`)};
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 16px;
-  width: 360px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 20px 30px;
-  text-decoration: none;
+  font-size: 20px;
+  line-height: 34px;
+  color: #111111;
+  margin: 0;
 
-  &:hover,
-  &:active {
-    background-color: #16457a;
+  &::placeholder {
+    color: #999999;
   }
 `;
 
-const IdContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  color: #585858;
-  font-size: 15px;
-`;
-
-const Question = styled.div`
-  display: flex;
-  justify-content: center;
-  color: #000000;
-  font-size: 14px;
-
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  left: 0;
-  bottom: 0;
+const InputBottomLine = styled.div`
   width: 100%;
-  padding: 30px;
+  height: 2px;
+  background-color: #f1f1f5;
 `;
 
-const Linkto = styled(Link)`
-  color: #004a9e;
+const Button = styled.button`
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 24px;
+  min-height: 52px;
   text-decoration: none;
-  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  ${({ theme }) => css`
+    background-color: ${theme.primaryColor};
+  `};
+`;
+
+const TextButton = styled(Link)`
+  padding: 8px 4px;
+  font-size: 13px;
+  line-height: 18px;
+  color: #767676;
+  margin-top: 8px;
+  text-decoration: underline;
 `;
 
 function Login() {
@@ -134,41 +131,41 @@ function Login() {
 
   return (
     <Container>
-      <Header>
-        <Span to="/">
-          <Arrow src={arrow} alt="이전" />
-        </Span>
-        <Title>로그인</Title>
-      </Header>
-      <Form>
+      <TopNavigation />
+      <Top>로그인</Top>
+      <div style={{ height: 40 }}></div>
+      <InputContainer>
         <Label>이메일</Label>
-        <div>
-          <Input
-            type="email"
-            placeholder="이메일을 입력해 주세요"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+        <Input
+          type="email"
+          placeholder="이메일을 입력해 주세요"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <InputBottomLine />
+      </InputContainer>
+      <div style={{ height: 20 }}></div>
+      <InputContainer>
         <Label>비밀번호</Label>
-        <div>
-          <Input
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        <Input
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <InputBottomLine />
+      </InputContainer>
+      <div style={{ height: 30 }}></div>
+      <Checkbox checked={saveId} onChange={() => setSaveId(!saveId)}>
+        아이디 저장
+      </Checkbox>
+      <BottomContainer>
+        <div style={{ height: 118 }}></div>
+
         <Button onClick={login}>로그인</Button>
-        <IdContainer>
-          <Checkbox checked={saveId} onChange={() => setSaveId(!saveId)}>
-            아이디 저장
-          </Checkbox>
-        </IdContainer>
-      </Form>
-      <Question>
-        아직 회원이 아니신가요? <Linkto to="/JoinSpace">회원가입</Linkto>
-      </Question>
+
+        <TextButton to="/join">아직 회원이 아니신가요?</TextButton>
+      </BottomContainer>
     </Container>
   );
 }
