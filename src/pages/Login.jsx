@@ -2,8 +2,6 @@ import styled from "styled-components";
 
 import { Link, useNavigate } from "react-router-dom";
 import arrow from "../assets/ArrowLeft.png";
-import mailImg from "../assets/Vector.png";
-import passwordImg from "../assets/Lock.png";
 import Input from "../components/Input";
 import Checkbox from "../components/Checkbox";
 import { useState, useEffect } from "react";
@@ -75,8 +73,6 @@ const IdContainer = styled.div`
   font-size: 15px;
 `;
 
-const FindLabel = styled.label``;
-
 const Question = styled.div`
   display: flex;
   justify-content: center;
@@ -104,10 +100,6 @@ function Login() {
   const [saveId, setSaveId] = useState(false);
 
   const navigate = useNavigate();
-
-  function handleFindPassword() {
-    navigate("/findpassword");
-  }
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("savedEmail");
@@ -152,7 +144,6 @@ function Login() {
         <Label>이메일</Label>
         <div>
           <Input
-            icon={mailImg}
             type="email"
             placeholder="이메일을 입력해 주세요"
             value={email}
@@ -162,7 +153,6 @@ function Login() {
         <Label>비밀번호</Label>
         <div>
           <Input
-            icon={passwordImg}
             type="password"
             placeholder="비밀번호를 입력해주세요"
             value={password}
@@ -174,7 +164,6 @@ function Login() {
           <Checkbox checked={saveId} onChange={() => setSaveId(!saveId)}>
             아이디 저장
           </Checkbox>
-          <FindLabel onClick={handleFindPassword}>비밀번호 찾기</FindLabel>
         </IdContainer>
       </Form>
       <Question>

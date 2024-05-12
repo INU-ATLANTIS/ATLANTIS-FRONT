@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
-import client from '../lib/client'
-import { Link } from 'react-router-dom'
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
-import { Avatar } from 'antd'
-import arrow from '../assets/ArrowLeft.png'
-import profileImg from '../assets/profileImg.png'
+import React, { useState, useEffect, useRef } from "react";
+import client from "../lib/client";
+import { Link, useNavigate } from "react-router-dom";
+import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import { Avatar } from "antd";
+import arrow from "../assets/ArrowLeft.png";
+import profileImg from "../assets/profileImg.png";
+import { BottomNavigation } from "../components/BottomNavigation";
 
 const GlobalStyle = createGlobalStyle`
   * { box-sizing: border-box; }
@@ -96,6 +97,34 @@ const SmallButton = styled(Link)`
 `
 
 const Button = styled(Link)`
+  color: #000000;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 25px;
+  margin-left: 20px;
+  width: 360px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border-bottom: 2px solid #eeeeee;
+`;
+
+const ButtonLabel = styled.label`
+  color: #000000;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 25px;
+  margin-left: 20px;
+  width: 360px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border-bottom: 2px solid #eeeeee;
+`;
+
+const LogoutButton = styled(Link)`
   background-color: #004a9e;
   border: none;
   border-radius: ${({ $round }) => ($round ? `9999px` : `8px`)};
@@ -108,7 +137,7 @@ const Button = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 20px;
+  margin: 50px 20px;
   text-decoration: none;
 
   &:hover,
@@ -127,7 +156,14 @@ function LoginUserInfo() {
   const [error, setError] = useState('')
   const [uploadedImageUrl, setUploadedImageUrl] = useState('')
 
-  const onChange = async e => {
+  const navigate = useNavigate();
+
+  function handleFindPassword() {
+    navigate("/findpassword");
+  }
+
+  const onChange = async (e) => {
+
     if (e.target.files[0]) {
       console.log('Selected file:', e.target.files[0])
       const fileUrl = await uploadFile(e.target.files[0])
@@ -283,10 +319,15 @@ function LoginUserInfo() {
               <p>이메일: {userInfo.email || 'Not provided'}</p>
             </div>
           </UserContainer>
-          <Button onClick={handleLogout}>로그아웃</Button>
+          <Button to="/myPosts">내 게시글</Button>
+          <Button to="/favoritePosts">좋아요한 게시글</Button>
+          <Button to="/userNotiList">알람 조회</Button>
+          <ButtonLabel onClick={handleFindPassword}>비밀번호 변경</ButtonLabel>
           <Button onClick={handleDeleteAccount}>회원 탈퇴</Button>
+          <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
         </Form>
       </Container>
+      <BottomNavigation />
     </ThemeProvider>
   )
 }
