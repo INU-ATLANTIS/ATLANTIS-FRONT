@@ -1,60 +1,44 @@
 import React, { useState, useEffect, useRef } from "react";
 import client from "../lib/client";
 import { Link, useNavigate } from "react-router-dom";
-import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import styled, { css } from "styled-components";
 import { Avatar } from "antd";
-import arrow from "../assets/ArrowLeft.png";
 import profileImg from "../assets/profileImg.png";
+import { TopNavigation } from "../components/TopNavigation";
 import { BottomNavigation } from "../components/BottomNavigation";
 
-const GlobalStyle = createGlobalStyle`
-  * { box-sizing: border-box; }
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: ${({ theme }) => theme.backgroundColor};
-    color: ${({ theme }) => theme.color};
-  }
-`
-const THEMES = {
-  light: { backgroundColor: '#ffffff', color: '#000000' },
-  dark: { backgroundColor: '#03040c', color: '#ffffff' },
-}
-
 const Container = styled.div`
-  width: 400px;
-  margin: auto;
-`
-const Header = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin: 30px auto 50px;
-  padding: 0 10px;
-  font-size: 22px;
-`
-const Arrow = styled.img`
-  width: 24px;
-`
-const Title = styled.div`
-  flex-grow: 1;
-  text-align: center;
-  margin-right: 15px;
-`
-const Span = styled(Link)``
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  padding: 0 16px;
+`;
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 118px;
+  padding: 16px;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+`;
+
+const Top = styled.div`
+  padding: 20px 16px 0px;
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 600;
+  color: #111111;
+`;
 
 const ProfileImgContainer = styled.div`
   position: relative;
-  display: inline-block; // 또는 필요에 따라 flex 사용
-  margin: 0 20px;
-`
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`
+  display: inline-block;
+  margin: 0 20px 0 10px;
+`;
 
 const UserContainer = styled.div`
   display: flex;
@@ -64,15 +48,16 @@ const UserContainer = styled.div`
   background-color: #f6f6f6;
   padding: 30px 0;
   align-items: center;
-  margin: 20px;
-  width: 360px;
-`
+  justify-content: center;
+  width: 100%;
+  margin: 0px;
+`;
 
 const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`
+`;
 
 const SmallButton = styled(Link)`
   background-color: #004a9e;
@@ -94,20 +79,20 @@ const SmallButton = styled(Link)`
   &:active {
     background-color: #16457a;
   }
-`
+`;
 
 const Button = styled(Link)`
   color: #000000;
   cursor: pointer;
   font-size: 16px;
   padding: 25px;
-  margin-left: 20px;
-  width: 360px;
+  width: 100%;
   height: 40px;
   display: flex;
   align-items: center;
   text-decoration: none;
   border-bottom: 2px solid #eeeeee;
+  margin: 0px;
 `;
 
 const ButtonLabel = styled.label`
@@ -115,46 +100,43 @@ const ButtonLabel = styled.label`
   cursor: pointer;
   font-size: 16px;
   padding: 25px;
-  margin-left: 20px;
-  width: 360px;
+  width: 100%;
   height: 40px;
   display: flex;
   align-items: center;
   text-decoration: none;
   border-bottom: 2px solid #eeeeee;
+  margin: 0px;
 `;
 
 const LogoutButton = styled(Link)`
-  background-color: #004a9e;
   border: none;
-  border-radius: ${({ $round }) => ($round ? `9999px` : `8px`)};
+  border-radius: 12px;
   color: #ffffff;
-  cursor: pointer;
   font-size: 16px;
-  padding: 16px;
-  width: 360px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 50px 20px;
+  line-height: 24px;
+  min-height: 42px;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0px;
 
-  &:hover,
-  &:active {
-    background-color: #16457a;
-  }
-`
+  ${({ theme }) => css`
+    background-color: ${theme.primaryColor};
+  `};
+`;
 
 function LoginUserInfo() {
   const [userInfo, setUserInfo] = useState({
-    email: '',
-    nickname: '',
-  })
-  const [Image, setImage] = useState(profileImg)
-  const fileInput = useRef(null)
-  const [error, setError] = useState('')
-  const [uploadedImageUrl, setUploadedImageUrl] = useState('')
+    email: "",
+    nickname: "",
+  });
+  const [Image, setImage] = useState(profileImg);
+  const fileInput = useRef(null);
+  const [error, setError] = useState("");
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
 
   const navigate = useNavigate();
 
@@ -163,173 +145,168 @@ function LoginUserInfo() {
   }
 
   const onChange = async (e) => {
-
     if (e.target.files[0]) {
-      console.log('Selected file:', e.target.files[0])
-      const fileUrl = await uploadFile(e.target.files[0])
-      console.log('Uploaded file URL:', fileUrl)
+      console.log("Selected file:", e.target.files[0]);
+      const fileUrl = await uploadFile(e.target.files[0]);
+      console.log("Uploaded file URL:", fileUrl);
       if (fileUrl) {
-        await updateProfileImage(fileUrl)
-        console.log('Profile image updated successfully')
-        setImage(fileUrl)
+        await updateProfileImage(fileUrl);
+        console.log("Profile image updated successfully");
+        setImage(fileUrl);
       }
     } else {
-      console.log('No file selected, reverting to default profile image')
-      setImage(profileImg)
+      console.log("No file selected, reverting to default profile image");
+      setImage(profileImg);
     }
-  }
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    window.location.href = '/'
-  }
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
 
-  const uploadFile = async file => {
-    console.log('Uploading file:', file)
-    const formData = new FormData()
-    formData.append('file', file)
+  const uploadFile = async (file) => {
+    console.log("Uploading file:", file);
+    const formData = new FormData();
+    formData.append("file", file);
 
     try {
       const response = await client.post(`/file/upload`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
-      })
-      console.log('Server response:', response)
-      return response.data
+      });
+      console.log("Server response:", response);
+      return response.data;
     } catch (error) {
-      console.error('Error uploading file:', error)
-      setError(error.message)
-      return ''
+      console.error("Error uploading file:", error);
+      setError(error.message);
+      return "";
     }
-  }
+  };
 
-  const updateProfileImage = async imageUrl => {
+  const updateProfileImage = async (imageUrl) => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem("token");
       const response = await client.patch(
         `/user/profileimage`,
         { profileImage: imageUrl },
         { headers: { Authorization: `Bearer ${token}` } }
-      )
-      const timestamp = new Date().getTime()
-      const updatedImageUrl = `${imageUrl}?t=${timestamp}`
+      );
+      const timestamp = new Date().getTime();
+      const updatedImageUrl = `${imageUrl}?t=${timestamp}`;
 
-      setUserInfo(prevState => ({
+      setUserInfo((prevState) => ({
         ...prevState,
         profileImage: updatedImageUrl,
-      }))
+      }));
 
-      setImage(updatedImageUrl)
-      setUploadedImageUrl(updatedImageUrl)
+      setImage(updatedImageUrl);
+      setUploadedImageUrl(updatedImageUrl);
     } catch (error) {
-      console.error('Error updating profile image:', error)
-      setError(error.message)
+      console.error("Error updating profile image:", error);
+      setError(error.message);
     }
-  }
+  };
 
   const handleDeleteAccount = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem("token");
       if (!token) {
-        alert('로그인이 필요합니다.')
-        return
+        alert("로그인이 필요합니다.");
+        return;
       }
 
-      const isConfirmed = window.confirm('정말로 계정을 삭제하시겠습니까?')
+      const isConfirmed = window.confirm("정말로 계정을 삭제하시겠습니까?");
       if (!isConfirmed) {
-        console.log('계정 삭제가 취소되었습니다.')
-        return
+        console.log("계정 삭제가 취소되었습니다.");
+        return;
       }
 
       await client.delete(`/auth/delete-account`, {
         headers: { Authorization: `Bearer ${token}` },
-      })
+      });
 
-      localStorage.clear()
-      window.location.href = '/'
+      localStorage.clear();
+      window.location.href = "/";
     } catch (error) {
-      console.error('Error deleting account:', error.response || error)
+      console.error("Error deleting account:", error.response || error);
       alert(
-        'Error deleting account: ' +
-          (error.response?.data?.message || 'Unknown error')
-      )
+        "Error deleting account: " +
+          (error.response?.data?.message || "Unknown error")
+      );
     }
-  }
+  };
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem("token");
         if (!token) {
           console.error(
-            'No token found, user must be logged in to fetch profile.'
-          )
-          return
+            "No token found, user must be logged in to fetch profile."
+          );
+          return;
         }
         const response = await client.get(`/user`, {
           headers: { Authorization: `Bearer ${token}` },
-        })
-        const { email, nickname, profileImage } = response.data
-        setUserInfo({ email, nickname, profileImage })
-        setImage(profileImage || profileImg)
+        });
+        const { email, nickname, profileImage } = response.data;
+        setUserInfo({ email, nickname, profileImage });
+        setImage(profileImage || profileImg);
       } catch (err) {
         const message =
-          err.response?.data?.message || 'Failed to fetch user information.'
-        setError(message)
+          err.response?.data?.message || "Failed to fetch user information.";
+        setError(message);
       }
-    }
-    fetchUserInfo()
-  }, [])
+    };
+    fetchUserInfo();
+  }, []);
 
   return (
-    <ThemeProvider theme={THEMES['light']}>
-      <Container>
-        <GlobalStyle />
-        <Header>
-          <Span to="/home">
-            <Arrow src={arrow} alt="이전" />
-          </Span>
-          <Title>로그인 유저 정보</Title>
-        </Header>
-        <Form>
-          <UserContainer>
-            <ProfileImgContainer>
-              <Avatar
-                src={Image}
-                size={100}
-                onClick={() => {
-                  fileInput.current.click()
-                }}
-              />
-              <input
-                type="file"
-                style={{ display: 'none' }}
-                name="profile_img"
-                onChange={onChange}
-                ref={fileInput}
-              />
-            </ProfileImgContainer>
-            <div>
-              <Row>
-                <p>닉네임: {userInfo.nickname || 'Not provided'}</p>
+    <Container>
+      <TopNavigation />
+      <Top>내 정보 </Top>
+      <div style={{ height: 20 }}></div>
+      <UserContainer>
+        <ProfileImgContainer>
+          <Avatar
+            src={Image}
+            size={100}
+            onClick={() => {
+              fileInput.current.click();
+            }}
+          />
+          <input
+            type="file"
+            style={{ display: "none" }}
+            name="profile_img"
+            onChange={onChange}
+            ref={fileInput}
+          />
+        </ProfileImgContainer>
+        <div>
+          <Row>
+            <p>닉네임: {userInfo.nickname || "Not provided"}</p>
 
-                <SmallButton to="/ChangeNickname">변경</SmallButton>
-              </Row>
-              <p>이메일: {userInfo.email || 'Not provided'}</p>
-            </div>
-          </UserContainer>
-          <Button to="/myPosts">내 게시글</Button>
-          <Button to="/favoritePosts">좋아요한 게시글</Button>
-          <Button to="/userNotiList">알람 조회</Button>
-          <ButtonLabel onClick={handleFindPassword}>비밀번호 변경</ButtonLabel>
-          <Button onClick={handleDeleteAccount}>회원 탈퇴</Button>
-          <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
-        </Form>
-      </Container>
+            <SmallButton to="/ChangeNickname">변경</SmallButton>
+          </Row>
+          <p>이메일: {userInfo.email || "Not provided"}</p>
+        </div>
+      </UserContainer>
+      <Button to="/myPosts">내 게시글</Button>
+      <Button to="/favoritePosts">좋아요한 게시글</Button>
+      <Button to="/userNotiList">알람 조회</Button>
+      <ButtonLabel onClick={handleFindPassword}>비밀번호 변경</ButtonLabel>
+      <Button onClick={handleDeleteAccount}>회원 탈퇴</Button>
+      <div style={{ height: 40 }}></div>
+
+      <BottomContainer>
+        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+      </BottomContainer>
       <BottomNavigation />
-    </ThemeProvider>
-  )
+    </Container>
+  );
 }
 
-export default LoginUserInfo
+export default LoginUserInfo;
