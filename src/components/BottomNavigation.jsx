@@ -29,10 +29,9 @@ export function BottomNavigation() {
           <Label>강의실</Label>
         </NavItem>
         <NavItem
-          active={pathname.includes("loginUserInfo")}
+          active={pathname.includes('loginUserInfo')}
           to="/loginUserInfo"
         >
-
           <LocationCity />
 
           <Label>내 정보</Label>

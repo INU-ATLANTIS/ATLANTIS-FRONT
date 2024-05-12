@@ -12,6 +12,17 @@ export default function MyPosts() {
 
   useEffect(() => {
     const getPosts = async () => {
+      const token = localStorage.getItem('token')
+
+      client.interceptors.request.use(config => {
+        config.headers = {
+          ...config.headers,
+          Authorization: `Bearer ${token}`,
+        }
+
+        return config
+      })
+
       const response = await client.get('/post/my')
 
       setPosts(response.data)

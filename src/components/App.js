@@ -1,21 +1,21 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
-import Welcome from "../pages/Welcome";
-import Join from "../pages/Join";
-import Login from "../pages/Login";
-import Home from "../pages/Home";
-import Building from "../pages/Building";
-import Buildings from "../pages/Buildings";
-import Posts from "../pages/Posts";
-import MarkerPosting from "../pages/MarkerPosting";
-import WeeklyPosts from "../pages/WeeklyPosts";
-import PostDetail from "../pages/PostDetail";
-import MyPosts from "../pages/MyPosts";
-import Posting from "../pages/Posting";
-import FindPassword from "./FindPassword";
-import UserInfo from "../pages/UserInfo";
-import LoginUserInfo from "../pages/LoginUserInfo";
-import ChangeNickname from "../pages/ChangeNickname";
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ThemeProvider } from 'styled-components'
+import Welcome from '../pages/Welcome'
+import Join from '../pages/Join'
+import Login from '../pages/Login'
+import Home from '../pages/Home'
+import Building from '../pages/Building'
+import Buildings from '../pages/Buildings'
+import Posts from '../pages/Posts'
+import MarkerPosting from '../pages/MarkerPosting'
+import WeeklyPosts from '../pages/WeeklyPosts'
+import PostDetail from '../pages/PostDetail'
+import MyPosts from '../pages/MyPosts'
+import Posting from '../pages/Posting'
+import FindPassword from './FindPassword'
+import UserInfo from '../pages/UserInfo'
+import LoginUserInfo from '../pages/LoginUserInfo'
+import ChangeNickname from '../pages/ChangeNickname'
 
 const theme = {
   primaryColor: "#004A92",
