@@ -16,6 +16,8 @@ import FindPassword from "./FindPassword";
 import UserInfo from "../pages/UserInfo";
 import LoginUserInfo from "../pages/LoginUserInfo";
 import ChangeNickname from "../pages/ChangeNickname";
+import FavoritePosts from "../pages/FavoritePosts";
+import UserNotiList from "../pages/UserNotiList";
 
 const theme = {
   primaryColor: "#004A92",
@@ -44,6 +46,8 @@ function App() {
           <Route path="/userInfo" element={<UserInfo />} />
           <Route path="/loginUserInfo" element={<LoginUserInfo />} />
           <Route path="/changeNickname" element={<ChangeNickname />} />
+          <Route path="/favoritePosts" element={<FavoritePosts />} />
+          <Route path="/userNotiList" element={<UserNotiList />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

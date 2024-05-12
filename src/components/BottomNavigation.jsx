@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { ReactComponent as OtherHouses } from "../assets/icons/other_houses.svg";
 import { ReactComponent as EventNote } from "../assets/icons/event_note.svg";
 import { ReactComponent as LocationCity } from "../assets/icons/location_city.svg";
+import { ReactComponent as User } from "../assets/icons/user.svg";
 import { Link, useLocation } from "react-router-dom";
 
 export function BottomNavigation() {
@@ -26,14 +27,13 @@ export function BottomNavigation() {
         <NavItem active={pathname.includes("building")} to="/building">
           <LocationCity />
 
-          <Label>강의실</Label>
+          <Label>건물</Label>
         </NavItem>
         <NavItem
           active={pathname.includes("loginUserInfo")}
           to="/loginUserInfo"
         >
-
-          <LocationCity />
+          <User />
 
           <Label>내 정보</Label>
         </NavItem>
