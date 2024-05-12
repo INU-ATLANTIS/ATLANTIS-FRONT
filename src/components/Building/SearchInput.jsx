@@ -1,30 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as Glass } from '../../assets/icons/magnifying_glass.svg'
-import { useState } from "react";
 
 export function SearchInput({ searchItems, activeEnter }) {
-    //     const [searchInput, setSearchInput] = useState('');
-    //     const searchItems = (searchValue) => {
-    //         setSearchInput(searchValue)
-    //     }
-    //     const onSubmit = async () => {
-    //         try {
-    //             console.log(searchInput)
-    //             if (searchInput === "") {
-    //                 alert("건물 코드를 정확하게 입력해주세요");
-    //                 return
-    //             }
-    // return 7;
-    //         } catch (err) {
-    //             console.log(err)
-    //         }
-    //     }
-    //     const activeEnter = (e) => {
-    //         if (e.key === "Enter") {
-    //             onSubmit();
-    //         }
-    //     }
-
     return (
         <Container>
             <Glass style={{ position: "absolute", left: "20px", top: "21px", margin: "7px" }}></Glass>
