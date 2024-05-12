@@ -18,9 +18,9 @@ import LoginUserInfo from '../pages/LoginUserInfo'
 import ChangeNickname from '../pages/ChangeNickname'
 
 const theme = {
-  primaryColor: '#004A92',
-  secondaryColor: '#FFA800',
-}
+  primaryColor: "#004A92",
+  secondaryColor: "#FFA800",
+};
 
 function App() {
   return (
@@ -47,7 +47,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

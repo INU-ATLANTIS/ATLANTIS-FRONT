@@ -124,12 +124,12 @@ const TitleContainer = styled.div`
     font-weight: 600;
 
     ${({ size }) =>
-      size === 'large'
-        ? css`
+    size === 'large'
+      ? css`
             font-size: 28px;
             line-height: 38px;
           `
-        : css`
+      : css`
             font-size: 24px;
             line-height: 34px;
           `}
