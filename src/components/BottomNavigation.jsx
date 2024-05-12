@@ -30,7 +30,7 @@ export function BottomNavigation() {
           <Label>건물</Label>
         </NavItem>
         <NavItem
-          active={pathname.includes("loginUserInfo")}
+          active={pathname.includes('loginUserInfo')}
           to="/loginUserInfo"
         >
           <User />

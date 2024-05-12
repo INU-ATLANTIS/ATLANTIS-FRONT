@@ -19,6 +19,7 @@ import ChangeNickname from "../pages/ChangeNickname";
 import FavoritePosts from "../pages/FavoritePosts";
 import UserNotiList from "../pages/UserNotiList";
 
+
 const theme = {
   primaryColor: "#004A92",
   secondaryColor: "#FFA800",

@@ -55,10 +55,9 @@ export default function Posting() {
         title: titleRef.current.value,
         content: contentRef.current.value,
         imageList: [],
-        buildingId: state.buildingId
+        buildingId: state.buildingId,
       })
-    }
-    else {
+    } else {
       await client.post('/post', {
         title: titleRef.current.value,
         content: contentRef.current.value,
@@ -75,7 +74,7 @@ export default function Posting() {
       <TopNavigation />
 
       <TitleContainer size="large">
-        <span>게시글 작성</span>
+        <span>게시글 {postId ? '수정' : '작성'}</span>
       </TitleContainer>
 
       <InputContainer>

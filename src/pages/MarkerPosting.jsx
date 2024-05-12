@@ -80,7 +80,10 @@ export default function MarkerPosting() {
 }
 
 function Location({ postId }) {
-  const latLng = useRef()
+  const latLng = useRef({
+    Ma: 37.375,
+    La: 126.631944,
+  })
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -113,16 +116,18 @@ function Location({ postId }) {
   }, [])
 
   const handlePost = async () => {
-    await client.post('/marker', {
-      name: '',
-      x: latLng.current.Ma,
-      y: latLng.current.La,
-      postId,
-    })
+    if (latLng) {
+      await client.post('/marker', {
+        name: '',
+        x: latLng.current.Ma,
+        y: latLng.current.La,
+        postId,
+      })
 
-    alert('마커 게시글이 성공적으로 등록되었어요')
+      alert('마커 게시글이 성공적으로 등록되었어요')
 
-    navigate(-1)
+      navigate(-1)
+    }
   }
 
   return (

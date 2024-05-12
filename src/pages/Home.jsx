@@ -4,12 +4,19 @@ import { PostFAB } from '../components/PostFAB'
 import client from '../lib/client'
 import { BottomSheet } from '../components/BottomSheet'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 
 export default function Home() {
   const [openBottomSheet, setOpenBottomSheet] = useState(false)
+  const [activeMarker, setActiveMarker] = useState('weekly')
   const postIdRef = useRef()
+  const markerIdRef = useRef()
+
+  const [resetting, setResetting] = useState(true)
 
   useEffect(() => {
+    if (resetting === false) return
+
     const mapContainer = document.getElementById('map')
     const mapOption = {
       center: new window.kakao.maps.LatLng(37.375, 126.631944),
@@ -22,16 +29,37 @@ export default function Home() {
     var markers = []
 
     const setMarkers = async () => {
-      const response = await client.get('/marker/top')
+      const token = localStorage.getItem('token')
 
-      response.data.topList.forEach(({ x, y, postId }) => {
-        addMarker(new window.kakao.maps.LatLng(x, y), postId)
+      client.interceptors.request.use(config => {
+        config.headers = {
+          ...config.headers,
+          Authorization: `Bearer ${token}`,
+        }
+
+        return config
       })
+
+      const response = await client.get(
+        activeMarker === 'weekly' ? '/marker/top' : '/marker/my'
+      )
+
+      if (activeMarker === 'weekly') {
+        response.data.topList.forEach(({ x, y, postId, markerId }) => {
+          addMarker(new window.kakao.maps.LatLng(x, y), postId, markerId)
+        })
+      } else {
+        response.data.userMarkerList.forEach(({ x, y, postId, markerId }) => {
+          addMarker(new window.kakao.maps.LatLng(x, y), postId, markerId)
+        })
+      }
     }
 
     setMarkers()
 
-    function addMarker(position, postId) {
+    if (resetting) setResetting(false)
+
+    function addMarker(position, postId, markerId) {
       // 마커를 생성합니다
       var marker = new window.kakao.maps.Marker({
         position: position,
@@ -43,11 +71,12 @@ export default function Home() {
       window.kakao.maps.event.addListener(marker, 'click', function () {
         setOpenBottomSheet(true)
         postIdRef.current = postId
+        markerIdRef.current = markerId
       })
       // 생성된 마커를 배열에 추가합니다
       markers.push(marker)
     }
-  }, [])
+  }, [activeMarker, resetting])
 
   return (
     <>
@@ -59,6 +88,22 @@ export default function Home() {
         }}
       ></div>
 
+      <FilterContainer>
+        <FilterButton
+          filterOn={activeMarker === 'weekly'}
+          onClick={() => setActiveMarker('weekly')}
+        >
+          주간 상위
+        </FilterButton>
+
+        <FilterButton
+          filterOn={activeMarker === 'my'}
+          onClick={() => setActiveMarker('my')}
+        >
+          내가 등록한
+        </FilterButton>
+      </FilterContainer>
+
       <PostFAB postMode="marker" />
 
       <BottomSheet
@@ -66,7 +111,16 @@ export default function Home() {
         onOpenChange={setOpenBottomSheet}
         height="fitContent"
       >
-        <BottomSheetContent postId={postIdRef.current}></BottomSheetContent>
+        <BottomSheetContent
+          postId={postIdRef.current}
+          markerId={markerIdRef.current}
+          isMine={activeMarker === 'my'}
+          onClose={() => setOpenBottomSheet(false)}
+          onDelete={() => {
+            setResetting(true)
+            setOpenBottomSheet(false)
+          }}
+        ></BottomSheetContent>
       </BottomSheet>
 
       <BottomNavigation />
@@ -74,8 +128,9 @@ export default function Home() {
   )
 }
 
-function BottomSheetContent({ postId }) {
+function BottomSheetContent({ postId, isMine, onClose, markerId, onDelete }) {
   const [post, setPost] = useState()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const setPostAsync = async () => {
@@ -87,12 +142,40 @@ function BottomSheetContent({ postId }) {
     setPostAsync()
   }, [postId])
 
+  const handleDelete = async () => {
+    await client.delete(`/marker/${markerId}`)
+
+    alert('마커가 삭제되었습니다')
+
+    onDelete()
+  }
+
   if (post === undefined) return null
 
   return (
-    <StyledBottomSheetContent>
+    <StyledBottomSheetContent onClick={() => {
+      navigate(`/post/${postId}`)
+    }}>
       <PostTitle>{post.title}</PostTitle>
       <PostContent>{post.content}</PostContent>
+
+      <BottomContainer>
+        {isMine ? (
+          <>
+            <Button onClick={handleDelete}>삭제</Button>
+            <Button
+              variant="primary"
+              onClick={() => navigate(`/posting/${postId}`)}
+            >
+              수정
+            </Button>
+          </>
+        ) : (
+          <Button variant="primary" onClick={onClose}>
+            확인
+          </Button>
+        )}
+      </BottomContainer>
     </StyledBottomSheetContent>
   )
 }
@@ -121,4 +204,55 @@ const PostContent = styled.p`
   word-break: keep-all;
   display: inline-block;
   white-space: pre-wrap;
+`
+
+const FilterContainer = styled.div`
+  margin: 16px;
+  margin-bottom: 0px;
+  display: flex;
+  gap: 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: calc(100vw - 32px);
+`
+
+const FilterButton = styled.button`
+  background-color: ${({ filterOn }) => (filterOn ? '#185aff' : '#f7f7fb')};
+  border-radius: 8px;
+  padding: 0px 12px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-size: 16px;
+  color: ${({ filterOn }) => (filterOn ? 'white' : '#505050')};
+  font-weight: 500;
+`
+
+const Button = styled.button`
+  border: none;
+  border-radius: 12px;
+  height: 52px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  width: 100%;
+  background-color: ${({ variant, theme }) =>
+    variant === 'primary' ? theme.primaryColor : '#E15241'};
+  color: #ffffff;
+`
+
+const BottomContainer = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 84px;
+  padding: 16px;
+  gap: 8px;
 `
