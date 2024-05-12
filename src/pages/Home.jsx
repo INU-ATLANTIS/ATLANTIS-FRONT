@@ -153,7 +153,9 @@ function BottomSheetContent({ postId, isMine, onClose, markerId, onDelete }) {
   if (post === undefined) return null
 
   return (
-    <StyledBottomSheetContent>
+    <StyledBottomSheetContent onClick={() => {
+      navigate(`/post/${postId}`)
+    }}>
       <PostTitle>{post.title}</PostTitle>
       <PostContent>{post.content}</PostContent>
 
