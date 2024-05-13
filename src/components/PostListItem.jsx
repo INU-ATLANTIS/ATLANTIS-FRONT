@@ -2,6 +2,7 @@ import { format } from "date-fns/format";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Avatar } from "antd";
+import profileImg from "../assets/profileImg.png";
 
 import { ReactComponent as LikeIcon } from "../assets/icons/thumb_up.svg";
 import { ReactComponent as CommentIcon } from "../assets/icons/chat.svg";
@@ -30,8 +31,8 @@ export function PostListItem({
     >
       <div>
         <Header>
-          <Avatar src={writerProfileImage} size={20} />
-          <WriterName>{writerNickname}</WriterName>
+          <Avatar src={writerProfileImage ?? profileImg} size={25} />
+          <WriterName>{writerNickname ?? "익명"}</WriterName>
         </Header>
         <Title>{title}</Title>
         <Content>{content}</Content>

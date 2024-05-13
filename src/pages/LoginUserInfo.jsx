@@ -287,7 +287,7 @@ function LoginUserInfo() {
         </ProfileImgContainer>
         <div>
           <Row>
-            <p>닉네임: {userInfo.nickname || "Not provided"}</p>
+            <p>닉네임: {userInfo.nickname || "익명"}</p>
 
             <SmallButton to="/ChangeNickname">변경</SmallButton>
           </Row>

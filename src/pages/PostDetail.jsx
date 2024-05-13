@@ -5,6 +5,8 @@ import client from "../lib/client";
 import styled from "styled-components";
 import { format } from "date-fns/format";
 import { BottomSheet } from "../components/BottomSheet";
+import { Avatar } from "antd";
+import profileImg from "../assets/profileImg.png";
 
 import { ReactComponent as LikeIcon } from "../assets/icons/thumb_up.svg";
 import { ReactComponent as CommentIcon } from "../assets/icons/chat.svg";
@@ -37,7 +39,7 @@ export default function PostDetail() {
     const setPostAsync = async () => {
       const response = await client.get(`/post/${postId}`);
       const commentResponse = await client.get(`/post/${postId}/comment-list`);
-      const myCommentResponse = await client.get('/post/comment/my');
+      const myCommentResponse = await client.get("/post/comment/my");
       setPost(response.data);
       setComments(
         commentResponse.data.commentList.filter(
@@ -49,9 +51,7 @@ export default function PostDetail() {
           ({ parentId }) => parentId !== null
         )
       );
-      setMyComments(
-        myCommentResponse.data.myComments
-      );
+      setMyComments(myCommentResponse.data.myComments);
     };
 
     setPostAsync();
@@ -69,10 +69,8 @@ export default function PostDetail() {
         ({ parentId }) => parentId === null
       )
     );
-    const myCommentResponse = await client.get('/post/comment/my');
-    setMyComments(
-      myCommentResponse.data.myComments
-    );
+    const myCommentResponse = await client.get("/post/comment/my");
+    setMyComments(myCommentResponse.data.myComments);
 
     setOpenCommentBottomSheet(false);
   };
@@ -89,10 +87,8 @@ export default function PostDetail() {
         ({ parentId }) => parentId !== null
       )
     );
-    const myCommentResponse = await client.get('/post/comment/my');
-    setMyComments(
-      myCommentResponse.data.myComments
-    );
+    const myCommentResponse = await client.get("/post/comment/my");
+    setMyComments(myCommentResponse.data.myComments);
 
     setOpenCommentBottomSheet(false);
   };
@@ -105,12 +101,10 @@ export default function PostDetail() {
     setPost(postResponse.data);
   };
 
-  const handleCommentDelete = async commentId => {
+  const handleCommentDelete = async (commentId) => {
     await client.delete(`/post/comment/${commentId}`);
-    const myCommentResponse = await client.get('/post/comment/my');
-    setMyComments(
-      myCommentResponse.data.myComments
-    );
+    const myCommentResponse = await client.get("/post/comment/my");
+    setMyComments(myCommentResponse.data.myComments);
     const commentResponse = await client.get(`/post/${postId}/comment-list`);
 
     setComments(
@@ -123,8 +117,7 @@ export default function PostDetail() {
         ({ parentId }) => parentId !== null
       )
     );
-
-  }
+  };
 
   if (post === undefined) return null;
   return (
@@ -132,8 +125,7 @@ export default function PostDetail() {
       <TopNavigation />
 
       <Header>
-        {/* <img src={post.writerProfileImage} alt="profile" /> */}
-
+        <Avatar src={post.writerProfileImage ?? profileImg} size={30} />
         <WriterName>{post.writerNickname ?? "익명"}</WriterName>
       </Header>
 
@@ -145,6 +137,7 @@ export default function PostDetail() {
 
       <LikeAndCommentInfoContainer>
         <div>
+          <InfoText>{format(new Date(post.writeDatetime), "MM.dd")}</InfoText>
           <LikeAndComment>
             <LikeIcon />
             <span>{post.likeCount}</span>
@@ -190,14 +183,19 @@ export default function PostDetail() {
                   >
                     답글 작성
                   </ReplyCommentButton>
-                  {myComments && myComments.some(comment => comment.commentId === commentId) && <DeleteButton
-                    onClick={e => {
-                      e.stopPropagation()
-                      handleCommentDelete(commentId)
-                    }}
-                  >
-                    삭제
-                  </DeleteButton>}
+                  {myComments &&
+                    myComments.some(
+                      (comment) => comment.commentId === commentId
+                    ) && (
+                      <DeleteButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCommentDelete(commentId);
+                        }}
+                      >
+                        삭제
+                      </DeleteButton>
+                    )}
                 </div>
               </CommentContainer>
 
@@ -214,14 +212,19 @@ export default function PostDetail() {
                       </CommentDateTime>
                     </div>
                   </ReplyCommentContainer2>
-                  {myComments && myComments.some(comment => comment.commentId === commentId) && <DeleteButton
-                    onClick={e => {
-                      e.stopPropagation()
-                      handleCommentDelete(commentId)
-                    }}
-                  >
-                    삭제
-                  </DeleteButton>}
+                  {myComments &&
+                    myComments.some(
+                      (comment) => comment.commentId === commentId
+                    ) && (
+                      <DeleteButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCommentDelete(commentId);
+                        }}
+                      >
+                        삭제
+                      </DeleteButton>
+                    )}
                 </ReplyCommentContainer>
               ))}
             </>
@@ -284,6 +287,7 @@ const WriterName = styled.span`
   font-size: 18px;
   font-weight: 500;
   color: #111111;
+  margin-left: 10px;
 `;
 
 const ContentContainer = styled.div`
@@ -399,7 +403,6 @@ const ReplyCommentContainer = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-
 `;
 
 const ReplyCommentButton = styled.button`
@@ -492,4 +495,14 @@ const DeleteButton = styled.button`
   margin-top: 12px;
   width: fit-content;
   margin-left: 8px;
-`
+`;
+
+const InfoText = styled.span`
+  line-height: 18px;
+  letter-spacing: -0.4px;
+  color: #999999;
+  margin-right: 15px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #505050;
+`;
