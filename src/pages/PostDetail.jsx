@@ -19,7 +19,7 @@ export default function PostDetail() {
   const [post, setPost] = useState();
   const [comments, setComments] = useState();
   const [replyComments, setReplyComments] = useState();
-
+  const [myComments, setMyComments] = useState();
   const [openCommentBottomSheet, setOpenCommentBottomSheet] = useState(false);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function PostDetail() {
     const setPostAsync = async () => {
       const response = await client.get(`/post/${postId}`);
       const commentResponse = await client.get(`/post/${postId}/comment-list`);
-
+      const myCommentResponse = await client.get('/post/comment/my');
       setPost(response.data);
       setComments(
         commentResponse.data.commentList.filter(
@@ -48,6 +48,9 @@ export default function PostDetail() {
         commentResponse.data.commentList.filter(
           ({ parentId }) => parentId !== null
         )
+      );
+      setMyComments(
+        myCommentResponse.data.myComments
       );
     };
 
@@ -66,6 +69,10 @@ export default function PostDetail() {
         ({ parentId }) => parentId === null
       )
     );
+    const myCommentResponse = await client.get('/post/comment/my');
+    setMyComments(
+      myCommentResponse.data.myComments
+    );
 
     setOpenCommentBottomSheet(false);
   };
@@ -82,6 +89,10 @@ export default function PostDetail() {
         ({ parentId }) => parentId !== null
       )
     );
+    const myCommentResponse = await client.get('/post/comment/my');
+    setMyComments(
+      myCommentResponse.data.myComments
+    );
 
     setOpenCommentBottomSheet(false);
   };
@@ -94,8 +105,28 @@ export default function PostDetail() {
     setPost(postResponse.data);
   };
 
-  if (post === undefined) return null;
+  const handleCommentDelete = async commentId => {
+    await client.delete(`/post/comment/${commentId}`);
+    const myCommentResponse = await client.get('/post/comment/my');
+    setMyComments(
+      myCommentResponse.data.myComments
+    );
+    const commentResponse = await client.get(`/post/${postId}/comment-list`);
 
+    setComments(
+      commentResponse.data.commentList.filter(
+        ({ parentId }) => parentId === null
+      )
+    );
+    setReplyComments(
+      commentResponse.data.commentList.filter(
+        ({ parentId }) => parentId !== null
+      )
+    );
+
+  }
+
+  if (post === undefined) return null;
   return (
     <Container>
       <TopNavigation />
@@ -150,28 +181,47 @@ export default function PostDetail() {
                     {format(new Date(writeDatetime), "MM/dd HH:mm")}
                   </CommentDateTime>
                 </div>
-
-                <ReplyCommentButton
-                  onClick={() => {
-                    commentIdRef.current = commentId;
-                    setOpenCommentBottomSheet(true);
-                  }}
-                >
-                  답글 작성
-                </ReplyCommentButton>
+                <div>
+                  <ReplyCommentButton
+                    onClick={() => {
+                      commentIdRef.current = commentId;
+                      setOpenCommentBottomSheet(true);
+                    }}
+                  >
+                    답글 작성
+                  </ReplyCommentButton>
+                  {myComments && myComments.some(comment => comment.commentId === commentId) && <DeleteButton
+                    onClick={e => {
+                      e.stopPropagation()
+                      handleCommentDelete(commentId)
+                    }}
+                  >
+                    삭제
+                  </DeleteButton>}
+                </div>
               </CommentContainer>
 
               {reply.map(({ nickname, writeDatetime, content, commentId }) => (
                 <ReplyCommentContainer key={commentId}>
-                  <ReplyCommentIcon />
+                  <ReplyCommentContainer2>
+                    <ReplyCommentIcon />
 
-                  <div>
-                    <CommentNickname>{nickname ?? "익명"}</CommentNickname>
-                    <CommentContent>{content}</CommentContent>
-                    <CommentDateTime>
-                      {format(new Date(writeDatetime), "MM/dd HH:mm")}
-                    </CommentDateTime>
-                  </div>
+                    <div>
+                      <CommentNickname>{nickname ?? "익명"}</CommentNickname>
+                      <CommentContent>{content}</CommentContent>
+                      <CommentDateTime>
+                        {format(new Date(writeDatetime), "MM/dd HH:mm")}
+                      </CommentDateTime>
+                    </div>
+                  </ReplyCommentContainer2>
+                  {myComments && myComments.some(comment => comment.commentId === commentId) && <DeleteButton
+                    onClick={e => {
+                      e.stopPropagation()
+                      handleCommentDelete(commentId)
+                    }}
+                  >
+                    삭제
+                  </DeleteButton>}
                 </ReplyCommentContainer>
               ))}
             </>
@@ -337,12 +387,19 @@ const CommentContainer = styled.div`
   justify-content: space-between;
 `;
 
+const ReplyCommentContainer2 = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+`;
+
 const ReplyCommentContainer = styled.div`
   padding: 12px 0px;
   border-bottom: 1px solid #f1f1f5;
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+
 `;
 
 const ReplyCommentButton = styled.button`
@@ -423,3 +480,16 @@ const Button = styled.button`
   background-color: ${({ theme }) => theme.primaryColor};
   color: #ffffff;
 `;
+
+const DeleteButton = styled.button`
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #e15241;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  margin-top: 12px;
+  width: fit-content;
+  margin-left: 8px;
+`
