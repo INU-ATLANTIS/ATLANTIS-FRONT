@@ -15,7 +15,7 @@ export default function Home() {
   const [resetting, setResetting] = useState(true)
 
   useEffect(() => {
-    if (resetting === false) return
+    // if (resetting === false) return
 
     const mapContainer = document.getElementById('map')
     const mapOption = {
@@ -60,6 +60,7 @@ export default function Home() {
     if (resetting) setResetting(false)
 
     function addMarker(position, postId, markerId) {
+      console.log(markers)
       // 마커를 생성합니다
       var marker = new window.kakao.maps.Marker({
         position: position,
