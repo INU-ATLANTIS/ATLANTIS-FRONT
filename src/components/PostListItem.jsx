@@ -1,11 +1,14 @@
-import { format } from 'date-fns/format'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
+import { format } from "date-fns/format";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { Avatar } from "antd";
 
-import { ReactComponent as LikeIcon } from '../assets/icons/thumb_up.svg'
-import { ReactComponent as CommentIcon } from '../assets/icons/chat.svg'
+import { ReactComponent as LikeIcon } from "../assets/icons/thumb_up.svg";
+import { ReactComponent as CommentIcon } from "../assets/icons/chat.svg";
 
 export function PostListItem({
+  writerProfileImage,
+  writerNickname,
   postId,
   title,
   content,
@@ -16,21 +19,25 @@ export function PostListItem({
   onEditPost,
   onDeletePost,
 }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <li
       key={postId}
       onClick={() => {
-        navigate(`/post/${postId}`)
+        navigate(`/post/${postId}`);
       }}
     >
       <div>
+        <Header>
+          <Avatar src={writerProfileImage} size={20} />
+          <WriterName>{writerNickname}</WriterName>
+        </Header>
         <Title>{title}</Title>
         <Content>{content}</Content>
 
         <InfoContainer>
-          <InfoText>{format(new Date(writeDatetime), 'MM.dd')}</InfoText>
+          <InfoText>{format(new Date(writeDatetime), "MM.dd")}</InfoText>
 
           {likeCount !== 0 && (
             <LikeAndCommentContainer>
@@ -51,17 +58,17 @@ export function PostListItem({
       {myPost && (
         <MyPostControlContainer>
           <EditButton
-            onClick={e => {
-              e.stopPropagation()
-              onEditPost(postId)
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditPost(postId);
             }}
           >
             수정
           </EditButton>
           <DeleteButton
-            onClick={e => {
-              e.stopPropagation()
-              onDeletePost(postId)
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeletePost(postId);
             }}
           >
             삭제
@@ -69,8 +76,14 @@ export function PostListItem({
         </MyPostControlContainer>
       )}
     </li>
-  )
+  );
 }
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
 
 const Title = styled.span`
   font-size: 18px;
@@ -84,7 +97,7 @@ const Title = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
   word-break: break-all;
-`
+`;
 
 const Content = styled.p`
   margin: 4px 0px;
@@ -100,26 +113,26 @@ const Content = styled.p`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-`
+`;
 
 const InfoText = styled.span`
   font-size: 13px;
   line-height: 18px;
   letter-spacing: -0.4px;
   color: #999999;
-`
+`;
 
 const InfoContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-`
+`;
 
 const LikeAndCommentContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
-`
+`;
 
 const EditButton = styled.button`
   font-size: 16px;
@@ -131,7 +144,7 @@ const EditButton = styled.button`
   padding: 4px 12px;
   margin-top: 12px;
   width: fit-content;
-`
+`;
 
 const DeleteButton = styled.button`
   font-size: 16px;
@@ -143,7 +156,7 @@ const DeleteButton = styled.button`
   padding: 4px 12px;
   margin-top: 12px;
   width: fit-content;
-`
+`;
 
 const MyPostControlContainer = styled.div`
   width: 100%;
@@ -151,4 +164,11 @@ const MyPostControlContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-`
+`;
+
+const WriterName = styled.span`
+  font-size: 18px;
+  font-weight: 500;
+  color: #111111;
+  margin-left: 10px;
+`;
