@@ -60,7 +60,6 @@ export default function Home() {
     if (resetting) setResetting(false)
 
     function addMarker(position, postId, markerId) {
-      console.log(markers)
       // 마커를 생성합니다
       var marker = new window.kakao.maps.Marker({
         position: position,
