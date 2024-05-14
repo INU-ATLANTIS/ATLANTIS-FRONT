@@ -3,6 +3,10 @@ import { TopNavigation } from '../components/TopNavigation'
 import client from '../lib/client'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import EventImg from "../assets/markers/favourite.png"
+import ConstructionImg from "../assets/markers/car-repair.png"
+import BasicImg from "../assets/markers/placeholder.png"
+const { kakao } = window
 
 export default function MarkerPosting() {
   const navigate = useNavigate()
@@ -80,6 +84,12 @@ export default function MarkerPosting() {
 }
 
 function Location({ postId }) {
+  const [markerType, setMarkerType] = useState(0);
+  const typeList = [
+    { type: null, name: "기본", imgSrc: BasicImg },
+    { type: "event", name: "행사", imgSrc: EventImg },
+    { type: "construction", name: "공사중", imgSrc: ConstructionImg }
+  ]
   const latLng = useRef({
     Ma: 37.375,
     La: 126.631944,
@@ -97,10 +107,20 @@ function Location({ postId }) {
     const map = new window.kakao.maps.Map(mapContainer, mapOption)
     map.setMaxLevel(4)
 
-    var marker = new window.kakao.maps.Marker({
+    let imageSrc = typeList[markerType].imgSrc, // 마커이미지의 주소입니다
+      imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
+
+    let markerImage = new kakao.maps.MarkerImage(
+      imageSrc,
+      imageSize
+    );
+    var marker
+    marker = new window.kakao.maps.Marker({
       // 지도 중심좌표에 마커를 생성합니다
       position: map.getCenter(),
+      image: markerImage
     })
+
 
     marker.setMap(map)
 
@@ -113,7 +133,7 @@ function Location({ postId }) {
 
       console.log(latLng.current)
     })
-  }, [])
+  }, [markerType])
 
   const handlePost = async () => {
     if (latLng) {
@@ -122,6 +142,7 @@ function Location({ postId }) {
         x: latLng.current.Ma,
         y: latLng.current.La,
         postId,
+        type: typeList[markerType].type,
       })
 
       alert('마커 게시글이 성공적으로 등록되었어요')
@@ -129,13 +150,18 @@ function Location({ postId }) {
       navigate(-1)
     }
   }
-
   return (
     <>
       <TitleContainer size="small">
         <span>어떤 위치에 글을 남길까요?</span>
       </TitleContainer>
-
+      <ButtonContainer>
+        {typeList.map((type, index) => <RadioBtn
+          onClick={() => setMarkerType(index)}
+          active={markerType === index}
+        >{type.name}</RadioBtn>
+        )}
+      </ButtonContainer>
       <div
         id="map"
         style={{
@@ -154,6 +180,42 @@ function Location({ postId }) {
     </>
   )
 }
+const ButtonContainer = styled.div`
+height: 40px;
+display: flex;
+padding: 8px;
+margin-bottom: 8px;
+flex-direction: row;
+align-items: flex-start;
+gap: 8px;
+width: 100%;
+`
+const RadioBtn = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 0px 8px;
+gap: 4px;
+
+width: auto;
+height: 32px;
+font-weight: 400;
+font-size: 12px;
+line-height: 16px;
+border-radius: 12px;
+
+${({ active }) =>
+    active
+      ? css`
+  background: #F1F1F1;
+  color: #111111;
+    `
+      : css`
+  background: #FBFBFB;
+  color: #585858;
+    `}
+`
 
 const Container = styled.div`
   width: 100vw;
@@ -167,19 +229,19 @@ const TitleContainer = styled.div`
   height: 58px;
   align-items: flex-end;
   padding-left: 16px;
-  margin-bottom: 40px;
+margin-bottom: 16px;
 
   span {
     color: #111111;
     font-weight: 600;
 
     ${({ size }) =>
-      size === 'large'
-        ? css`
+    size === 'large'
+      ? css`
             font-size: 28px;
             line-height: 38px;
           `
-        : css`
+      : css`
             font-size: 24px;
             line-height: 34px;
           `}
