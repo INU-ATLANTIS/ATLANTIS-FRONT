@@ -142,7 +142,9 @@ export default function PostDetail() {
 
       <LikeAndCommentInfoContainer>
         <div>
-          <InfoText>{format(new Date(post.writeDatetime), "MM.dd")}</InfoText>
+          <InfoText>
+            {format(new Date(post.writeDatetime), "yyyy.MM.dd hh:mm:ss")}
+          </InfoText>
           <LikeAndComment>
             <LikeIcon />
             <span>{post.likeCount}</span>

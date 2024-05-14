@@ -1,38 +1,38 @@
-import styled from 'styled-components'
-import { BottomNavigation } from '../components/BottomNavigation'
-import client from '../lib/client'
-import { useEffect, useState } from 'react'
-import { ReactComponent as RightArrow } from '../assets/icons/arrow_right.svg'
-import { useNavigate } from 'react-router-dom'
+import styled from "styled-components";
+import { BottomNavigation } from "../components/BottomNavigation";
+import client from "../lib/client";
+import { useEffect, useState } from "react";
+import { ReactComponent as RightArrow } from "../assets/icons/arrow_right.svg";
+import { useNavigate } from "react-router-dom";
 
-import { PostListItem } from '../components/PostListItem'
-import { PostFAB } from '../components/PostFAB'
+import { PostListItem } from "../components/PostListItem";
+import { PostFAB } from "../components/PostFAB";
 
 export default function Posts() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [posts, setPosts] = useState()
+  const [posts, setPosts] = useState();
 
   useEffect(() => {
     const getPosts = async () => {
-      const response = await client.get('/post/latest-list')
+      const response = await client.get("/post/latest-list");
 
-      setPosts(response.data)
-    }
+      setPosts(response.data);
+    };
 
-    getPosts()
-  }, [])
+    getPosts();
+  }, []);
 
   return (
     <Container>
       <TopBoxContainer>
-        <TopBox onClick={() => navigate('/posts/weeklyPosts')}>
-          <TopBoxTitle>주간 상위 게시글</TopBoxTitle>
+        <TopBox onClick={() => navigate("/posts/weeklyPosts")}>
+          <TopBoxTitle>주간 인기 게시글</TopBoxTitle>
 
           <RightArrow />
         </TopBox>
 
-        <TopBox onClick={() => navigate('/myPosts')}>
+        <TopBox onClick={() => navigate("/myPosts")}>
           <TopBoxTitle>내 게시글</TopBoxTitle>
 
           <RightArrow />
@@ -44,14 +44,14 @@ export default function Posts() {
       </TitleContainer>
 
       <PostList>
-        {posts && posts.latestList.map(post => <PostListItem {...post} />)}
+        {posts && posts.latestList.map((post) => <PostListItem {...post} />)}
       </PostList>
 
       <PostFAB postMode="post" />
 
       <BottomNavigation />
     </Container>
-  )
+  );
 }
 
 const Container = styled.div`
@@ -60,14 +60,14 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-`
+`;
 
 const TopBoxContainer = styled.div`
   margin: 16px;
   margin-bottom: 0px;
   display: flex;
   gap: 16px;
-`
+`;
 
 const TopBox = styled.div`
   background-color: #f7f7fb;
@@ -77,14 +77,14 @@ const TopBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-`
+`;
 
 const TopBoxTitle = styled.span`
   font-size: 18px;
   line-height: 24px;
   color: #505050;
   font-weight: 600;
-`
+`;
 
 const TitleContainer = styled.div`
   display: flex;
@@ -100,7 +100,7 @@ const TitleContainer = styled.div`
     font-size: 28px;
     line-height: 38px;
   }
-`
+`;
 
 const PostList = styled.ul`
   list-style: none;
@@ -113,4 +113,4 @@ const PostList = styled.ul`
     padding: 16px;
     border-top: 1px solid #f1f1f5;
   }
-`
+`;
