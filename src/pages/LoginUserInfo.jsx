@@ -209,6 +209,18 @@ function LoginUserInfo() {
     }
   };
 
+  const handleFileChange = async (e) => {
+    if (e.target.files[0]) {
+      const imageUrl = await uploadFile(e.target.files[0]);
+      if (imageUrl) {
+        setImage(imageUrl);
+        setUploadedImageUrl(imageUrl); // 이미지 URL 상태 업데이트
+      }
+    } else {
+      setError("No file selected.");
+    }
+  };
+
   const handleDeleteAccount = async () => {
     try {
       const token = localStorage.getItem("token");
