@@ -13,6 +13,7 @@ export function PostListItem({
   postId,
   title,
   content,
+  postTitleImage,
   writeDatetime,
   likeCount,
   commentCount,
@@ -30,30 +31,39 @@ export function PostListItem({
       }}
     >
       <div>
-        <Header>
-          <Avatar src={writerProfileImage ?? profileImg} size={25} />
-          <WriterName>{writerNickname ?? "익명"}</WriterName>
-        </Header>
-        <Title>{title}</Title>
-        <Content>{content}</Content>
+        <MainContent>
+          <TextContainer>
+            <Header>
+              <Avatar src={writerProfileImage ?? profileImg} size={25} />
+              <WriterName>{writerNickname ?? "익명"}</WriterName>
+            </Header>
+            <Title>{title}</Title>
+            <Content>{content}</Content>
+            <InfoContainer>
+              <InfoText>{format(new Date(writeDatetime), "MM.dd")}</InfoText>
 
-        <InfoContainer>
-          <InfoText>{format(new Date(writeDatetime), "MM.dd")}</InfoText>
+              {likeCount !== 0 && (
+                <LikeAndCommentContainer>
+                  <LikeIcon />
+                  <InfoText>{likeCount}</InfoText>
+                </LikeAndCommentContainer>
+              )}
 
-          {likeCount !== 0 && (
-            <LikeAndCommentContainer>
-              <LikeIcon />
-              <InfoText>{likeCount}</InfoText>
-            </LikeAndCommentContainer>
+              {commentCount !== 0 && (
+                <LikeAndCommentContainer>
+                  <CommentIcon />
+                  <InfoText>{commentCount}</InfoText>
+                </LikeAndCommentContainer>
+              )}
+            </InfoContainer>
+          </TextContainer>
+
+          {postTitleImage && (
+            <ImageContainer>
+              <TitleImage src={postTitleImage} alt="Post image" />
+            </ImageContainer>
           )}
-
-          {commentCount !== 0 && (
-            <LikeAndCommentContainer>
-              <CommentIcon />
-              <InfoText>{commentCount}</InfoText>
-            </LikeAndCommentContainer>
-          )}
-        </InfoContainer>
+        </MainContent>
       </div>
 
       {myPost && (
@@ -79,6 +89,32 @@ export function PostListItem({
     </li>
   );
 }
+
+const MainContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 120px;
+`;
+
+const TextContainer = styled.div`
+  flex: 1;
+  align-self: stretch;
+`;
+
+const ImageContainer = styled.div`
+  width: 70px;
+  height: 70px;
+  margin-right: 10px;
+  align-self: center;
+`;
+
+const TitleImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+`;
 
 const Header = styled.div`
   display: flex;

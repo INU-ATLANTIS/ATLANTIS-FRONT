@@ -133,6 +133,11 @@ export default function PostDetail() {
         <Title>{post.title}</Title>
 
         <Content>{post.content}</Content>
+
+        {post.postImageList &&
+          post.postImageList.map((image, index) => (
+            <PostImg key={index} src={image} alt={`Post Image ${index}`} />
+          ))}
       </ContentContainer>
 
       <LikeAndCommentInfoContainer>
@@ -303,6 +308,12 @@ const Title = styled.span`
   color: #111111;
   word-break: keep-all;
   white-space: pre-wrap;
+`;
+
+const PostImg = styled.img`
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
 `;
 
 const Content = styled.p`
