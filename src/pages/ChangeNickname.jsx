@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { TopNavigation } from "../components/TopNavigation";
 import { BottomNavigation } from "../components/BottomNavigation";
+import profileImg from "../assets/profileImg.png";
 
 const Container = styled.div`
   display: flex;
@@ -129,22 +130,41 @@ function ChangeNickname() {
   const handleNicknameReset = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await client.patch(
+
+      // Patch request to reset nickname
+      const responseNickname = await client.patch(
         "/user/nickname",
-        { nickname: "익명" },
+        { nickname: null },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (response.status === 200) {
-        alert("닉네임이 초기화되었습니다.");
-        navigate("/LoginUserInfo");
+
+      if (responseNickname.status === 200) {
+        const responseImage = await client.patch(
+          "/user/profileimage",
+          { profileImage: null },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (responseImage.status === 200) {
+          alert("닉네임 및 프로필 사진이 초기화되었습니다.");
+          navigate("/LoginUserInfo");
+        } else {
+          throw new Error(
+            `Failed to reset profile image: ${responseImage.statusText}`
+          );
+        }
       } else {
-        throw new Error(`Failed to reset nickname: ${response.statusText}`);
+        throw new Error(
+          `Failed to reset nickname: ${responseNickname.statusText}`
+        );
       }
     } catch (error) {
-      console.error("닉네임 초기화 실패:", error);
-      alert("닉네임 초기화 실패: " + error.message);
+      console.error("닉네임 또는 프로필 사진 초기화 실패:", error);
+      alert("닉네임 또는 프로필 사진 초기화 실패: " + error.message);
     }
   };
 
