@@ -105,13 +105,13 @@ export default function Home() {
 
   return (
     <>
-      {/* <div
+      <div
         id="map"
         style={{
           width: '100vw',
           height: 'calc(100vh - 48px)',
         }}
-      ></div> */}
+      ></div>
 
       <FilterContainer>
         <FilterButton
