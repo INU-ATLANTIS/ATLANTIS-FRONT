@@ -137,6 +137,12 @@ export default function PostDetail() {
     navigate(`/posting/${postId}`)
   }
 
+  const handleReportUser = async userId => {
+    const response = await client.post(`/user/report/${userId}`)
+    if (response.data.code === 'SU') {
+      alert('유저 신고가 완료되었습니다.')
+    }
+  }
 
   if (post === undefined) return null
   return (
@@ -151,7 +157,7 @@ export default function PostDetail() {
         {myPosts &&
           myPosts.myPosts.some(
             (myPost) => myPost.postId === post.postId
-          ) && (<MyPostControlContainer>
+          ) ? (<MyPostControlContainer>
             <EditButton
               onClick={(e) => {
                 e.stopPropagation();
@@ -168,7 +174,16 @@ export default function PostDetail() {
             >
               삭제
             </DeleteButton>
-          </MyPostControlContainer>
+          </MyPostControlContainer>)
+          :
+          (<DeleteButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleReportUser(post.writerUserId);
+            }}
+          >
+            신고
+          </DeleteButton>
           )}
       </HeaderContainer>
       <ContentContainer>
