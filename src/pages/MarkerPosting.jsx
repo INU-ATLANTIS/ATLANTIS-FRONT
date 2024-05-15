@@ -155,13 +155,17 @@ function Location({ postId }) {
       <TitleContainer size="small">
         <span>어떤 위치에 글을 남길까요?</span>
       </TitleContainer>
-      <ButtonContainer>
-        {typeList.map((type, index) => <RadioBtn
-          onClick={() => setMarkerType(index)}
-          active={markerType === index}
-        >{type.name}</RadioBtn>
-        )}
-      </ButtonContainer>
+      <StyledDiv>
+        <span>마커의 카테고리를 선택해주세요.</span>
+        <ButtonContainer>
+
+          {typeList.map((type, index) => <RadioBtn
+            onClick={() => setMarkerType(index)}
+            active={markerType === index}
+          >{type.name}</RadioBtn>
+          )}
+        </ButtonContainer>
+      </StyledDiv>
       <div
         id="map"
         style={{
@@ -180,11 +184,23 @@ function Location({ postId }) {
     </>
   )
 }
-const ButtonContainer = styled.div`
-height: 40px;
+
+const StyledDiv = styled.div`
+height: auto;
 display: flex;
-padding: 8px;
+padding: 8px 0 0 16px;
 margin-bottom: 8px;
+flex-direction: column;
+gap: 8px;
+width: 100%;
+span {
+  color: #111111;
+  font-weight: 400;
+`
+const ButtonContainer = styled.div`
+height: auto;
+display: flex;
+
 flex-direction: row;
 align-items: flex-start;
 gap: 8px;

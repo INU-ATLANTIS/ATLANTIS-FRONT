@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TopNavigation } from "../components/TopNavigation";
 import { useParams } from "react-router-dom";
 import client from "../lib/client";
@@ -14,11 +15,13 @@ import { ReactComponent as ReplyCommentIcon } from "../assets/icons/prompt_sugge
 
 export default function PostDetail() {
   const { postId } = useParams();
+  const navigate = useNavigate();
 
   const contentRef = useRef(null);
   const commentIdRef = useRef(null);
 
   const [post, setPost] = useState();
+  const [myPosts, setMyPosts] = useState();
   const [comments, setComments] = useState();
   const [replyComments, setReplyComments] = useState();
   const [myComments, setMyComments] = useState();
@@ -38,9 +41,12 @@ export default function PostDetail() {
 
     const setPostAsync = async () => {
       const response = await client.get(`/post/${postId}`);
+      const myPostResponse = await client.get('/post/my')
       const commentResponse = await client.get(`/post/${postId}/comment-list`);
       const myCommentResponse = await client.get("/post/comment/my");
+
       setPost(response.data);
+      setMyPosts(myPostResponse.data);
       setComments(
         commentResponse.data.commentList.filter(
           ({ parentId }) => parentId === null
@@ -119,16 +125,52 @@ export default function PostDetail() {
     );
   };
 
+  const handlePostDelete = async postId => {
+    await client.delete(`/post/${postId}`)
+
+    const response = await client.get('/post/my')
+    setMyPosts(response.data)
+    navigate(`/posts`)
+  }
+
+  const handlePostEdit = async postId => {
+    navigate(`/posting/${postId}`)
+  }
+
+
   if (post === undefined) return null;
   return (
     <Container>
       <TopNavigation />
+      <HeaderContainer>
+        <Header>
+          <Avatar src={post.writerProfileImage ?? profileImg} size={30} />
+          <WriterName>{post.writerNickname ?? "익명"}</WriterName>
 
-      <Header>
-        <Avatar src={post.writerProfileImage ?? profileImg} size={30} />
-        <WriterName>{post.writerNickname ?? "익명"}</WriterName>
-      </Header>
-
+        </Header>
+        {myPosts &&
+          myPosts.myPosts.some(
+            (myPost) => myPost.postId === post.postId
+          ) && (<MyPostControlContainer>
+            <EditButton
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePostEdit(post.postId);
+              }}
+            >
+              수정
+            </EditButton>
+            <DeleteButton
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePostDelete(post.postId);
+              }}
+            >
+              삭제
+            </DeleteButton>
+          </MyPostControlContainer>
+          )}
+      </HeaderContainer>
       <ContentContainer>
         <Title>{post.title}</Title>
 
@@ -276,6 +318,12 @@ const Container = styled.div`
   flex-direction: column;
   width: 100vw;
   padding: 24px 16px 0px;
+`;
+const HeaderContainer = styled.div`
+align-items: flex-end;
+justify-content: space-between;
+  display: flex;
+  align-items: center;
 `;
 
 const Header = styled.div`
@@ -482,6 +530,24 @@ const Button = styled.button`
   width: 100%;
   background-color: ${({ theme }) => theme.primaryColor};
   color: #ffffff;
+`;
+const MyPostControlContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+`;
+
+const EditButton = styled.button`
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #f7f7fb;
+  color: #505050;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  margin-top: 12px;
+  width: fit-content;
 `;
 
 const DeleteButton = styled.button`
