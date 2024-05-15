@@ -6,8 +6,7 @@ export function PostFAB({ postMode, buildingId }) {
   const handleClick = () => {
     if (postMode === 'marker') {
       navigate('/markerPosting')
-    }
-    if (postMode === 'alarm') {
+    } else if (postMode === 'alarm') {
       navigate('/markerAlarmPosting')
     } else {
       if (buildingId) {
