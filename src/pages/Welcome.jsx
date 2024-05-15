@@ -1,8 +1,11 @@
 import styled, { css } from 'styled-components'
 
 import { Link } from 'react-router-dom'
+import { useHXAP } from '../bridge/useHXAP'
 
 export default function Welcome() {
+  useHXAP()
+
   return (
     <Container>
       <LogoText>

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import EventImg from '../assets/markers/favourite.png'
 import ConstructionImg from '../assets/markers/car-repair.png'
 import BasicImg from '../assets/markers/placeholder.png'
+import { HXAP } from '../bridge'
 
 const { kakao } = window
 
@@ -40,7 +41,7 @@ export default function Home() {
     var markers = []
 
     const setMarkers = async () => {
-      const token = localStorage.getItem('token')
+      const token = await HXAP.loadData('token')
 
       client.interceptors.request.use(config => {
         config.headers = {
@@ -104,13 +105,13 @@ export default function Home() {
 
   return (
     <>
-      <div
+      {/* <div
         id="map"
         style={{
           width: '100vw',
           height: 'calc(100vh - 48px)',
         }}
-      ></div>
+      ></div> */}
 
       <FilterContainer>
         <FilterButton

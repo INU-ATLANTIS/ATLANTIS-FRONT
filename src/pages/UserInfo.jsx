@@ -5,6 +5,7 @@ import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { Avatar } from 'antd'
 import arrow from '../assets/ArrowLeft.png'
 import profileImg from '../assets/profileImg.png'
+import { HXAP } from '../bridge'
 
 const GlobalStyle = createGlobalStyle`
   * { box-sizing: border-box; }
@@ -79,7 +80,7 @@ function UserInfo() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = await HXAP.loadData('token')
         const response = await client.get(`/user/${email}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
