@@ -148,7 +148,7 @@ function Location({ alarmMessage }) {
         return 0
       })
 
-      await client.post('/v1/noti', {
+      await client.post('/noti', {
         message: alarmMessage,
         dateTime: '2024-05-15T00:00:00',
         radius: 200,
