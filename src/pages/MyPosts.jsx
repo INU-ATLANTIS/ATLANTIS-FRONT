@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import client from '../lib/client'
 import { PostListItem } from '../components/PostListItem'
 import { useNavigate } from 'react-router-dom'
+import { HXAP } from '../bridge'
 
 export default function MyPosts() {
   const navigate = useNavigate()
@@ -12,7 +13,7 @@ export default function MyPosts() {
 
   useEffect(() => {
     const getPosts = async () => {
-      const token = localStorage.getItem('token')
+      const token = await HXAP.loadData('token')
 
       client.interceptors.request.use(config => {
         config.headers = {

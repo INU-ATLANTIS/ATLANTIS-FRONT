@@ -7,7 +7,7 @@ const StyledInput = styled.input`
   width: 24px;
   height: 24px;
   background-color: #f6f6f6;
-  margin-right: 10px;
+  margin: 10px 10px 10px 20px;
 
   &:checked {
     border-color: transparent;

@@ -6,48 +6,15 @@ import { useNavigate } from 'react-router-dom'
 import EventImg from '../assets/markers/favourite.png'
 import ConstructionImg from '../assets/markers/car-repair.png'
 import BasicImg from '../assets/markers/placeholder.png'
-import { ReactComponent as Photo } from '../assets/icons/photo.svg'
-import { Image } from 'antd'
+
 import { HXAP } from '../bridge'
 const { kakao } = window
 
-export default function MarkerPosting() {
+export default function MarkerAlarmPosting() {
   const navigate = useNavigate()
   const [step, setStep] = useState('text')
 
-  const postId = useRef()
-
   const titleRef = useRef(null)
-  const contentRef = useRef(null)
-  const fileInputRef = useRef(null)
-
-  const [image, setImage] = useState(null)
-
-  const uploadFile = async file => {
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await client.post(`/file/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      return response.data // 업로드된 이미지의 URL 반환
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      return ''
-    }
-  }
-
-  const handleFileChange = async e => {
-    if (e.target.files[0]) {
-      const imageUrl = await uploadFile(e.target.files[0])
-      if (imageUrl) {
-        setImage(imageUrl) // 이미지 URL 상태 업데이트
-      }
-    }
-  }
 
   const handlePost = async () => {
     const token = await HXAP.loadData('token')
@@ -60,14 +27,6 @@ export default function MarkerPosting() {
 
       return config
     })
-
-    const response = await client.post('/post', {
-      title: titleRef.current.value,
-      content: contentRef.current.value,
-      imageList: image ? [image] : [],
-    })
-
-    postId.current = response.data.postId
 
     setStep('location')
   }
@@ -87,40 +46,15 @@ export default function MarkerPosting() {
       {step === 'text' ? (
         <>
           <TitleContainer size="large">
-            <span>게시글 작성</span>
+            <span>알림 메시지 작성</span>
           </TitleContainer>
 
           <InputContainer>
-            <Label>글 제목</Label>
+            <Label>알림 메시지</Label>
             <Input type="text" autoFocus ref={titleRef} />
             <InputBottomLine />
           </InputContainer>
 
-          <ContentTextarea ref={contentRef} />
-
-          {image && (
-            <Image
-              src={image}
-              style={{
-                width: '50px',
-                height: '50px',
-                position: 'fixed',
-                bottom: '98px',
-                left: '20px',
-                zIndex: 100,
-              }}
-              onClick={() => fileInputRef.current.click()}
-            />
-          )}
-          <SmallButton onClick={() => fileInputRef.current.click()}>
-            <Photo />
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              style={{ display: 'none' }}
-            />
-          </SmallButton>
           <BottomContainer>
             <div style={{ height: 84 }}></div>
 
@@ -131,20 +65,19 @@ export default function MarkerPosting() {
         </>
       ) : (
         <>
-          <Location postId={postId.current} />
+          <Location alarmMessage={titleRef.current.value} />
         </>
       )}
     </Container>
   )
 }
 
-function Location({ postId }) {
-  const [markerType, setMarkerType] = useState(0)
-  const typeList = [
-    { type: null, name: '기본', imgSrc: BasicImg },
-    { type: 'event', name: '행사', imgSrc: EventImg },
-    { type: 'construction', name: '공사중', imgSrc: ConstructionImg },
-  ]
+const typeList = [
+  { type: null, name: '기본', imgSrc: BasicImg },
+  { type: 'event', name: '행사', imgSrc: EventImg },
+  { type: 'construction', name: '공사중', imgSrc: ConstructionImg },
+]
+function Location({ alarmMessage }) {
   const latLng = useRef({
     Ma: 37.375,
     La: 126.631944,
@@ -162,7 +95,7 @@ function Location({ postId }) {
     const map = new window.kakao.maps.Map(mapContainer, mapOption)
     map.setMaxLevel(4)
 
-    let imageSrc = typeList[markerType].imgSrc, // 마커이미지의 주소입니다
+    let imageSrc = typeList[0].imgSrc, // 마커이미지의 주소입니다
       imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
 
     let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize)
@@ -184,19 +117,45 @@ function Location({ postId }) {
 
       console.log(latLng.current)
     })
-  }, [markerType])
+  }, [])
 
   const handlePost = async () => {
     if (latLng) {
+      const myPost = await client.get('/post/my')
+
       await client.post('/marker', {
         name: '',
         x: latLng.current.Ma,
         y: latLng.current.La,
-        postId,
-        type: typeList[markerType].type,
+        postId: myPost.data.myPosts[0].postId,
+        type: typeList[0].type,
       })
 
-      alert('마커 게시글이 성공적으로 등록되었어요')
+      const response = await client.get('/marker/my')
+
+      const markerList = response.data.userMarkerList.filter(
+        ({ postId }) => postId === myPost.data.myPosts[0].postId
+      )
+
+      const sortedMarkerList = markerList.sort(function (a, b) {
+        if (a.markerId > b.markerId) {
+          return 1
+        }
+        if (a.markerId < b.markerId) {
+          return -1
+        }
+
+        return 0
+      })
+
+      await client.post('/noti', {
+        message: alarmMessage,
+        dateTime: '2024-05-15T00:00:00',
+        radius: 200,
+        markerId: sortedMarkerList[sortedMarkerList.length - 1].markerId,
+      })
+
+      alert('마커 알람이 성공적으로 등록되었어요')
 
       navigate(-1)
     }
@@ -204,19 +163,9 @@ function Location({ postId }) {
   return (
     <>
       <TitleContainer size="small">
-        <span>어떤 위치에 글을 남길까요?</span>
+        <span>어떤 위치에 알림을 설정할까요?</span>
       </TitleContainer>
-      <StyledDiv>
-        <span>마커의 카테고리를 선택해주세요.</span>
-        <ButtonContainer>
 
-          {typeList.map((type, index) => <RadioBtn
-            onClick={() => setMarkerType(index)}
-            active={markerType === index}
-          >{type.name}</RadioBtn>
-          )}
-        </ButtonContainer>
-      </StyledDiv>
       <div
         id="map"
         style={{
@@ -229,60 +178,12 @@ function Location({ postId }) {
         <div style={{ height: 84 }}></div>
 
         <Button variant="primary" onClick={handlePost}>
-          작성 완료
+          등록 완료
         </Button>
       </BottomContainer>
     </>
   )
 }
-
-const StyledDiv = styled.div`
-height: auto;
-display: flex;
-padding: 8px 0 0 16px;
-margin-bottom: 8px;
-flex-direction: column;
-gap: 8px;
-width: 100%;
-span {
-  color: #111111;
-  font-weight: 400;
-`
-const ButtonContainer = styled.div`
-height: auto;
-display: flex;
-
-flex-direction: row;
-align-items: flex-start;
-gap: 8px;
-width: 100%;
-`
-const RadioBtn = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 0px 8px;
-  gap: 4px;
-
-  width: auto;
-  height: 32px;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
-  border-radius: 12px;
-
-  ${({ active }) =>
-    active
-      ? css`
-          background: #f1f1f1;
-          color: #111111;
-        `
-      : css`
-          background: #fbfbfb;
-          color: #585858;
-        `}
-`
 
 const Container = styled.div`
   width: 100vw;
@@ -303,12 +204,12 @@ const TitleContainer = styled.div`
     font-weight: 600;
 
     ${({ size }) =>
-    size === 'large'
-      ? css`
+      size === 'large'
+        ? css`
             font-size: 28px;
             line-height: 38px;
           `
-      : css`
+        : css`
             font-size: 24px;
             line-height: 34px;
           `}

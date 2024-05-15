@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import client from "../lib/client";
-import { Link } from "react-router-dom";
-import styled, { css } from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { TopNavigation } from "../components/TopNavigation";
-import { BottomNavigation } from "../components/BottomNavigation";
-import profileImg from "../assets/profileImg.png";
+import React, { useState } from 'react'
+import client from '../lib/client'
+import { Link } from 'react-router-dom'
+import styled, { css } from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import { TopNavigation } from '../components/TopNavigation'
+import { BottomNavigation } from '../components/BottomNavigation'
+import profileImg from '../assets/profileImg.png'
+import { HXAP } from '../bridge'
 
 const Container = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
   padding: 0 16px;
-`;
+`
 
 const Top = styled.div`
   padding: 20px 16px 0px;
@@ -21,14 +22,14 @@ const Top = styled.div`
   line-height: 34px;
   font-weight: 600;
   color: #111111;
-`;
+`
 
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding: 0px 16px;
-`;
+`
 
 const Input = styled.input`
   border: none;
@@ -40,13 +41,13 @@ const Input = styled.input`
   &::placeholder {
     color: #999999;
   }
-`;
+`
 
 const InputBottomLine = styled.div`
   width: 100%;
   height: 2px;
   background-color: #f1f1f5;
-`;
+`
 
 const BottomContainer = styled.div`
   display: flex;
@@ -58,7 +59,7 @@ const BottomContainer = styled.div`
   position: fixed;
   bottom: 0px;
   left: 0px;
-`;
+`
 
 const Button = styled(Link)`
   border: none;
@@ -77,7 +78,7 @@ const Button = styled(Link)`
   ${({ theme }) => css`
     background-color: ${theme.primaryColor};
   `};
-`;
+`
 
 const ClearButton = styled(Link)`
   border: none;
@@ -94,7 +95,7 @@ const ClearButton = styled(Link)`
   width: 100%;
 
   ${({ theme, variant }) =>
-    variant === "primary"
+    variant === 'primary'
       ? css`
           background-color: ${theme.primaryColor};
           color: #ffffff;
@@ -103,70 +104,71 @@ const ClearButton = styled(Link)`
           background-color: #ecf2ff;
           color: #185aff;
         `}
-`;
+`
 
 function ChangeNickname() {
-  const [newNickname, setNewNickname] = useState("");
-  const navigate = useNavigate();
+  const [newNickname, setNewNickname] = useState('')
+  const navigate = useNavigate()
 
   const updateNickname = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = await HXAP.loadData('token')
+
       await client.patch(
         `/user/nickname`,
         { nickname: newNickname },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      );
+      )
 
-      alert("닉네임이 성공적으로 변경되었습니다.");
-      navigate("/LoginUserInfo");
+      alert('닉네임이 성공적으로 변경되었습니다.')
+      navigate('/LoginUserInfo')
     } catch (error) {
-      alert("닉네임 변경에 실패했습니다.");
+      alert('닉네임 변경에 실패했습니다.')
     }
-  };
+  }
 
   const handleNicknameReset = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = await HXAP.loadData('token')
 
       // Patch request to reset nickname
       const responseNickname = await client.patch(
-        "/user/nickname",
+        '/user/nickname',
         { nickname: null },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      );
+      )
 
       if (responseNickname.status === 200) {
         const responseImage = await client.patch(
-          "/user/profileimage",
+          '/user/profileimage',
           { profileImage: null },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
-        );
+        )
 
         if (responseImage.status === 200) {
-          alert("닉네임 및 프로필 사진이 초기화되었습니다.");
-          navigate("/LoginUserInfo");
+          alert('닉네임 및 프로필 사진이 초기화되었습니다.')
+          navigate('/LoginUserInfo')
         } else {
           throw new Error(
             `Failed to reset profile image: ${responseImage.statusText}`
-          );
+          )
         }
       } else {
         throw new Error(
           `Failed to reset nickname: ${responseNickname.statusText}`
-        );
+        )
       }
     } catch (error) {
-      console.error("닉네임 또는 프로필 사진 초기화 실패:", error);
-      alert("닉네임 또는 프로필 사진 초기화 실패: " + error.message);
+      console.error('닉네임 또는 프로필 사진 초기화 실패:', error)
+      alert('닉네임 또는 프로필 사진 초기화 실패: ' + error.message)
     }
-  };
+  }
 
   return (
     <Container>
@@ -178,7 +180,7 @@ function ChangeNickname() {
           type="text"
           placeholder="새 닉네임"
           value={newNickname}
-          onChange={(e) => setNewNickname(e.target.value)}
+          onChange={e => setNewNickname(e.target.value)}
         />
         <InputBottomLine />
       </InputContainer>
@@ -188,7 +190,7 @@ function ChangeNickname() {
       </BottomContainer>
       <BottomNavigation />
     </Container>
-  );
+  )
 }
 
-export default ChangeNickname;
+export default ChangeNickname
