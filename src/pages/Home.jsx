@@ -15,6 +15,7 @@ const { kakao } = window
 export default function Home() {
   const [openBottomSheet, setOpenBottomSheet] = useState(false)
   const [activeMarker, setActiveMarker] = useState('weekly')
+  const [toggleOpen, setToggleOpen] = useState(false)
   const postIdRef = useRef()
   const markerIdRef = useRef()
 
@@ -53,12 +54,33 @@ export default function Home() {
       })
 
       const response = await client.get(
-        activeMarker === 'weekly' ? '/marker/top' : '/marker/my'
+        activeMarker === 'weekly' || activeMarker === 'weekly10' || activeMarker === 'weekly20' ? '/marker/top' : '/marker/my'
       )
+      console.log(response.data);
       if (activeMarker === 'weekly') {
         response.data.topList.forEach(({ x, y, postId, markerId, type }) => {
           addMarker(new window.kakao.maps.LatLng(x, y), postId, markerId, type)
         })
+      } else if (activeMarker === 'weekly10') {
+        if (response.data.topList.length > 10) {
+          for (let i = 0; i < 10; i++) {
+            addMarker(new window.kakao.maps.LatLng(response.data.topList[i].x, response.data.topList[i].y), response.data.topList[i].postId, response.data.topList[i].markerId, response.data.topList[i].type)
+          }
+        } else {
+          response.data.topList.forEach(({ x, y, postId, markerId, type }) => {
+            addMarker(new window.kakao.maps.LatLng(x, y), postId, markerId, type)
+          })
+        }
+      } else if (activeMarker === 'weekly20') {
+        if (response.data.topList.length > 20) {
+          for (let i = 0; i < 20; i++) {
+            addMarker(new window.kakao.maps.LatLng(response.data.topList[i].x, response.data.topList[i].y), response.data.topList[i].postId, response.data.topList[i].markerId, response.data.topList[i].type)
+          }
+        } else {
+          response.data.topList.forEach(({ x, y, postId, markerId, type }) => {
+            addMarker(new window.kakao.maps.LatLng(x, y), postId, markerId, type)
+          })
+        }
       } else {
         response.data.userMarkerList.forEach(
           ({ x, y, postId, markerId, type }) => {
@@ -79,7 +101,7 @@ export default function Home() {
 
     function addMarker(position, postId, markerId, type) {
       let imageSrc =
-          typeList[typeList.findIndex(list => list.type === type)].imgSrc, // 마커이미지의 주소입니다
+        typeList[typeList.findIndex(list => list.type === type)].imgSrc, // 마커이미지의 주소입니다
         imageSize = new kakao.maps.Size(35, 35) // 마커이미지의 크기입니다
 
       let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize)
@@ -114,16 +136,46 @@ export default function Home() {
       ></div>
 
       <FilterContainer>
-        <FilterButton
-          filterOn={activeMarker === 'weekly'}
-          onClick={() => {
-            setActiveMarker('weekly')
-            setResetting(true)
-          }}
-        >
-          주간 상위
-        </FilterButton>
-
+        <ButtonContainer>
+          <FilterButton
+            filterOn={activeMarker === 'weekly' || activeMarker === 'weekly10' || activeMarker === 'weekly20'}
+            onClick={() => {
+              setToggleOpen(!toggleOpen)
+            }}
+          >
+            주간 상위
+          </FilterButton>
+          {toggleOpen && <><FilterButton
+            filterOn={activeMarker === 'weekly10'}
+            onClick={() => {
+              setActiveMarker('weekly10')
+              setResetting(true)
+              setToggleOpen(false)
+            }}
+          >
+            10개 보기
+          </FilterButton>
+            <FilterButton
+              filterOn={activeMarker === 'weekly20'}
+              onClick={() => {
+                setActiveMarker('weekly20')
+                setResetting(true)
+                setToggleOpen(false)
+              }}
+            >
+              20개 보기
+            </FilterButton>
+            <FilterButton
+              filterOn={activeMarker === 'weekly'}
+              onClick={() => {
+                setActiveMarker('weekly')
+                setResetting(true)
+                setToggleOpen(false)
+              }}
+            >
+              전체 보기
+            </FilterButton></>}
+        </ButtonContainer>
         <FilterButton
           filterOn={activeMarker === 'my'}
           onClick={() => {
@@ -213,6 +265,12 @@ function BottomSheetContent({ postId, isMine, onClose, markerId, onDelete }) {
     </StyledBottomSheetContent>
   )
 }
+
+const ButtonContainer = styled.div`
+display: flex;
+flex-direction: column;
+gap: 8px;
+`
 
 const StyledBottomSheetContent = styled.div`
   width: 100vw;
