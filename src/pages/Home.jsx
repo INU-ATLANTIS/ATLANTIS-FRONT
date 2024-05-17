@@ -14,7 +14,7 @@ const { kakao } = window
 
 export default function Home() {
   const [openBottomSheet, setOpenBottomSheet] = useState(false)
-  const [activeMarker, setActiveMarker] = useState('weekly')
+  const [activeMarker, setActiveMarker] = useState('weekly10')
   const [toggleOpen, setToggleOpen] = useState(false)
   const postIdRef = useRef()
   const markerIdRef = useRef()
@@ -61,6 +61,16 @@ export default function Home() {
         response.data.topList.forEach(({ x, y, postId, markerId, type }) => {
           addMarker(new window.kakao.maps.LatLng(x, y), postId, markerId, type)
         })
+        console.log(markers);
+        var clusterer = new kakao.maps.MarkerClusterer({
+          map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+          averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+          minLevel: 2 // 클러스터 할 최소 지도 레벨
+        });
+
+        // 클러스터러에 마커들을 추가합니다
+        clusterer.addMarkers(markers);
+
       } else if (activeMarker === 'weekly10') {
         if (response.data.topList.length > 10) {
           for (let i = 0; i < 10; i++) {
@@ -143,7 +153,7 @@ export default function Home() {
               setToggleOpen(!toggleOpen)
             }}
           >
-            주간 상위
+            주간 인기
           </FilterButton>
           {toggleOpen && <><FilterButton
             filterOn={activeMarker === 'weekly10'}
@@ -271,7 +281,6 @@ display: flex;
 flex-direction: column;
 gap: 8px;
 `
-
 const StyledBottomSheetContent = styled.div`
   width: 100vw;
   display: flex;

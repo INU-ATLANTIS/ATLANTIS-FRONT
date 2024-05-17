@@ -27,7 +27,7 @@ export default function Posts() {
     <Container>
       <TopBoxContainer>
         <TopBox onClick={() => navigate('/posts/weeklyPosts')}>
-          <TopBoxTitle>주간 상위 게시글</TopBoxTitle>
+          <TopBoxTitle>주간 인기 게시글</TopBoxTitle>
 
           <RightArrow />
         </TopBox>
